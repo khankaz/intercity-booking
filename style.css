@@ -1,20 +1,70 @@
 body {
-  font-family: sans-serif;
+  font-family: 'Inter', sans-serif;
   margin: 0;
-  padding: 0;
-  background: #f2f2f2;
+  background: #f0f2f5;
+  color: #333;
 }
+
 header {
-  background: #444;
+  background: #007bff;
   color: white;
-  padding: 1rem;
+  padding: 1.5rem;
   text-align: center;
 }
+
 main {
+  max-width: 800px;
+  margin: 2rem auto;
   padding: 1rem;
 }
-form {
+
+.routes, .form {
   background: white;
+  border-radius: 10px;
   padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.routes h2, .form h2 {
+  margin-top: 0;
+}
+
+.route-card {
+  background: #e9f4ff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+form input, form select, form button {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
   border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+form button {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: background 0.3s;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #666;
 }
