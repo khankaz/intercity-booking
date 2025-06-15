@@ -1,28 +1,46 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const routes = [
-    { id: 1, from: "Караганда", to: "Боровое", seats: 4, booked: 2 },
-    { id: 2, from: "Астана", to: "Боровое", seats: 4, booked: 1 },
-    { id: 3, from: "Боровое", to: "Караганда", seats: 4, booked: 0 }
-  ];
+const routes = [
+  { name: "Караганда → Астана", seats: 4, booked: 1 },
+  { name: "Астана → Боровое", seats: 4, booked: 2 },
+  { name: "Боровое → Караганда", seats: 4, booked: 3 }
+];
 
-  const routeList = document.getElementById("routes");
-  const routeSelect = document.getElementById("routeSelect");
+function updateRouteDisplay() {
+  const list = document.getElementById("routesList");
+  const select = document.getElementById("routeSelect");
+  list.innerHTML = "";
+  select.innerHTML = "";
 
-  routes.forEach(route => {
-    const li = document.createElement("li");
+  routes.forEach((route, index) => {
     const available = route.seats - route.booked;
-    li.textContent = `${route.from} → ${route.to} | Свободных мест: ${available}`;
-    routeList.appendChild(li);
+    const card = document.createElement("div");
+    card.className = "route-card";
+    card.innerHTML = `<strong>${route.name}</strong><br>Свободных мест: ${available}`;
+    list.appendChild(card);
 
     const option = document.createElement("option");
-    option.value = route.id;
-    option.text = `${route.from} → ${route.to}`;
-    routeSelect.appendChild(option);
+    option.value = index;
+    option.textContent = `${route.name} — ${available} мест`;
+    select.appendChild(option);
   });
+}
 
-  document.getElementById("bookingForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    document.getElementById("status").textContent = "Заявка отправлена! Мы свяжемся с вами по телефону.";
-    e.target.reset();
-  });
+document.getElementById("bookingForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const index = document.getElementById("routeSelect").value;
+  const route = routes[index];
+  const message = document.getElementById("resultMessage");
+
+  if (route.booked < route.seats) {
+    route.booked++;
+    updateRouteDisplay();
+    message.style.color = "green";
+    message.textContent = "✅ Бронирование успешно!";
+  } else {
+    message.style.color = "red";
+    message.textContent = "❌ Мест больше нет!";
+  }
+
+  this.reset();
 });
+
+updateRouteDisplay();
