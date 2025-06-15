@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Кабинет водителя</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Кабинет водителя</h1>
+    <form id="loginForm">
+      <input type="tel" placeholder="Введите номер телефона" required>
+      <button type="submit">Получить код</button>
+    </form>
+
+    <div id="tripForm" style="display:none;">
+      <h2>Создать поездку</h2>
+      <select id="carType">
+        <option value="sedan">Седан</option>
+        <option value="crossover">Кроссовер</option>
+        <option value="minivan6">Минивэн (6 мест)</option>
+        <option value="minivan7">Минивэн (7 мест)</option>
+      </select>
+      <input type="date" id="tripDate" required>
+      <input type="time" id="tripTime" required>
+      <button id="startTrip">Создать поездку</button>
+    </div>
+  </div>
+
+  <script src="script_driver.js"></script>
+</body>
+</html>
