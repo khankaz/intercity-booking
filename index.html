@@ -1,1 +1,38 @@
-<!DOCTYPE html><html><head><title>Intercity Booking</title></head><body><h1>Добро пожаловать!</h1></body></html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Межгород Караганда — Астана — Боровое</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Бронирование межгород</h1>
+    <p>Караганда — Астана — Боровое</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Доступные маршруты</h2>
+      <ul id="routes"></ul>
+    </section>
+
+    <section>
+      <h2>Бронирование</h2>
+      <form id="bookingForm">
+        <label>Имя: <input type="text" name="name" required /></label><br/>
+        <label>Номер телефона: <input type="tel" name="phone" required /></label><br/>
+        <label>Маршрут:
+          <select name="route" id="routeSelect"></select>
+        </label><br/>
+        <label>Дата: <input type="date" name="date" required /></label><br/>
+        <button type="submit">Забронировать</button>
+      </form>
+      <p id="status"></p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
