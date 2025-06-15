@@ -1,36 +1,34 @@
-// Пассажир
-const passengerForm = document.getElementById("passengerForm");
-if (passengerForm) {
-  passengerForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    const name = document.getElementById("name").value;
+// Авторизация через код
+const sendCodeBtn = document.getElementById("sendCode");
+const authForm = document.getElementById("authForm");
+
+if (sendCodeBtn && authForm) {
+  let generatedCode = null;
+
+  sendCodeBtn.addEventListener("click", () => {
     const phone = document.getElementById("phone").value;
-    const pickup = document.getElementById("pickup").value;
-    const route = document.getElementById("route").value;
-    const date = document.getElementById("date").value;
-    const seat = document.getElementById("seat").value;
+    if (!phone) {
+      alert("Введите номер телефона");
+      return;
+    }
 
-    console.log("📦 Заявка пассажира:", { name, phone, pickup, route, date, seat });
+    generatedCode = Math.floor(100000 + Math.random() * 900000); // 6-значный код
+    console.log("Код для WhatsApp:", generatedCode); // ⚠️ Здесь интеграция с WhatsApp API позже
 
-    document.getElementById("status").textContent = "Заявка отправлена! Ожидайте подтверждения.";
-    passengerForm.reset();
+    document.getElementById("code").style.display = "block";
+    document.getElementById("loginButton").style.display = "block";
+    document.getElementById("authStatus").textContent = "Код отправлен. Введите его ниже.";
   });
-}
 
-// Водитель
-const driverForm = document.getElementById("driverForm");
-if (driverForm) {
-  driverForm.addEventListener("submit", function (e) {
+  authForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const driverName = document.getElementById("driverName").value;
-    const driverPhone = document.getElementById("driverPhone").value;
-    const route = document.getElementById("route").value;
-    const date = document.getElementById("date").value;
-    const time = document.getElementById("time").value;
-
-    console.log("🚗 Поездка водителя:", { driverName, driverPhone, route, date, time });
-
-    document.getElementById("driverStatus").textContent = "Поездка добавлена!";
-    driverForm.reset();
+    const userCode = document.getElementById("code").value;
+    if (userCode == generatedCode) {
+      document.getElementById("authStatus").textContent = "Успешный вход!";
+      // Перенаправить на нужную страницу
+      window.location.href = "index.html"; // или другой путь
+    } else {
+      document.getElementById("authStatus").textContent = "Неверный код, попробуйте ещё раз.";
+    }
   });
 }
