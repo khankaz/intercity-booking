@@ -1,137 +1,39 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Бронирование для пассажиров</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f9f9f9;
-      padding: 30px;
-    }
-    .container {
-      max-width: 450px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 8px;
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-    button {
-      background-color: #2b8a3e;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #237132;
-    }
-    #status {
-      text-align: center;
-      color: green;
-      font-weight: bold;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пассажир — Бронирование поездки</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h2>Бронирование маршрута</h2>
+  <header class="header">
+    <h1>Бронирование для пассажиров</h1>
+    <p>Выберите маршрут и забронируйте место</p>
+  </header>
 
-    <form id="bookingForm">
-      <label for="name">Имя:</label>
-      <input type="text" id="name" required />
+  <main class="container">
+    <section class="booking">
+      <h2>Заявка</h2>
+      <form id="passengerForm">
+        <input type="text" id="name" placeholder="Ваше имя" required>
+        <input type="tel" id="phone" placeholder="Номер WhatsApp" required>
+        <input type="text" id="pickup" placeholder="Где вас забрать?" required>
 
-      <label for="phone">WhatsApp номер:</label>
-      <input type="tel" id="phone" required />
+        <label for="route">Маршрут:</label>
+        <select id="route" required>
+          <option value="">Выберите маршрут</option>
+          <option value="Караганда – Астана">Караганда – Астана</option>
+          <option value="Караганда – Щучинск">Караганда – Щучинск</option>
+          <option value="Караганда – Бурабай">Караганда – Бурабай</option>
+          <option value="Астана – Караганда">Астана – Караганда</option>
+          <option value="Щучинск – Караганда">Щучинск – Караганда</option>
+          <option value="Бурабай – Караганда">Бурабай – Караганда</option>
+        </select>
 
-      <label for="route">Маршрут:</label>
-      <select id="route" required>
-        <option value="">Выберите маршрут</option>
-        <option value="Караганда – Астана">Караганда – Астана</option>
-        <option value="Караганда – Щучинск">Караганда – Щучинск</option>
-        <option value="Караганда – Бурабай">Караганда – Бурабай</option>
-        <option value="Астана – Караганда">Астана – Караганда</option>
-        <option value="Щучинск – Караганда">Щучинск – Караганда</option>
-        <option value="Бурабай – Караганда">Бурабай – Караганда</option>
-      </select>
+        <label for="date">Дата поездки:</label>
+        <input type="date" id="date" required>
 
-      <label for="date">Дата поездки:</label>
-      <input type="date" id="date" required />
-
-      <label for="time">Время отправления:</label>
-      <input type="time" id="time" required />
-
-      <button type="submit">Забронировать</button>
-    </form>
-
-    <p id="status"></p>
-  </div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "ТВОЙ_API_KEY",
-      authDomain: "ТВОЙ_ПРОЕКТ.firebaseapp.com",
-      databaseURL: "https://ТВОЙ_ПРОЕКТ.firebaseio.com",
-      projectId: "ТВОЙ_ПРОЕКТ",
-      storageBucket: "ТВОЙ_ПРОЕКТ.appspot.com",
-      messagingSenderId: "1234567890",
-      appId: "1:1234567890:web:abc123"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    const form = document.getElementById("bookingForm");
-    const status = document.getElementById("status");
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const name = document.getElementById("name").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const route = document.getElementById("route").value;
-      const date = document.getElementById("date").value;
-      const time = document.getElementById("time").value;
-
-      const bookingData = {
-        name,
-        phone,
-        route,
-        date,
-        time,
-        role: "passenger",
-        createdAt: new Date().toISOString()
-      };
-
-      const newRef = db.ref("bookings").push();
-      newRef.set(bookingData).then(() => {
-        status.textContent = "Бронирование успешно отправлено!";
-        form.reset();
-      }).catch((err) => {
-        status.textContent = "Ошибка при отправке. Попробуйте снова.";
-        console.error(err);
-      });
-    });
-  </script>
-</body>
-</html>
+        <label for="seat">Выберите место:</label>
+        <select id="seat">
+          <option value="Переднее
