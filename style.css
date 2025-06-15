@@ -9,7 +9,7 @@ body {
   background: #1a73e8;
   color: white;
   text-align: center;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem;
 }
 
 .container {
@@ -18,72 +18,60 @@ body {
   margin: auto;
 }
 
-.routes, .booking {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  padding: 1rem;
-  margin-bottom: 2rem;
+button {
+  padding: 0.7rem;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  background: #1a73e8;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
-.routes h2, .booking h2 {
-  margin-top: 0;
+button:hover {
+  background: #125acc;
 }
 
-form input, form select, form button {
+form input, form select {
   display: block;
   width: 100%;
   padding: 0.75rem;
   margin: 0.5rem 0;
   border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-form button {
-  background: #1a73e8;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-form button:hover {
-  background: #125acc;
 }
 
 .footer {
   text-align: center;
-  font-size: 0.875rem;
-  color: #666;
-  padding: 1rem 0;
-}
-
-.route-card {
-  background: #e9f0fb;
   padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #666;
 }
 
-.seat-map {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
+.hidden {
+  display: none;
+}
+
+#seatsVisual {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 1rem;
 }
 
-.seat {
-  background-color: #eee;
-  border: 1px solid #ccc;
-  padding: 0.5rem;
-  text-align: center;
-  border-radius: 6px;
-  cursor: pointer;
+.seat-box {
+  width: 80px;
+  height: 60px;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-weight: bold;
 }
 
-.seat.selected {
-  background-color: #1a73e8;
+.seat-box.booked {
+  background: #ff6b6b;
   color: white;
-  font-weight: bold;
 }
