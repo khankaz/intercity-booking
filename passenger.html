@@ -1,55 +1,44 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Пассажир – Бронирование</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Бронирование поездки</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="header">
-    <h1>Бронирование поездки</h1>
+    <h1>Выбор места в салоне</h1>
   </header>
 
   <main class="container">
-    <form id="bookingForm">
-      <input type="text" name="name" placeholder="Ваше имя" required />
-      <input type="tel" name="phone" placeholder="Номер телефона" required />
-      <input type="text" name="address" placeholder="Адрес посадки" required />
-
-      <label for="routeSelect">Маршрут:</label>
-      <select name="route" id="routeSelect">
-        <option value="0">Караганда - Астана</option>
-        <option value="1">Караганда - Щучинск</option>
-        <option value="2">Караганда - Бурабай</option>
-        <option value="3">Астана - Караганда</option>
-        <option value="4">Щучинск - Караганда</option>
-        <option value="5">Бурабай - Караганда</option>
+    <section>
+      <label for="route">Маршрут:</label>
+      <select id="route">
+        <option>Караганда → Астана</option>
+        <option>Караганда → Щучинск</option>
+        <option>Караганда → Бурабай</option>
+        <option>Астана → Караганда</option>
+        <option>Щучинск → Караганда</option>
+        <option>Бурабай → Караганда</option>
       </select>
 
-      <label for="carType">Тип авто:</label>
-      <select name="carType" id="carType">
-        <option value="sedan">Седан</option>
-        <option value="crossover">Кроссовер</option>
-        <option value="crossover6">Кроссовер (6 мест)</option>
-        <option value="minivan6">Минивэн (6 мест)</option>
-        <option value="minivan7">Минивэн (7 мест)</option>
-      </select>
+      <label for="date">Дата поездки:</label>
+      <input type="date" id="date" required>
 
-      <div id="seatMapContainer"></div>
-      <input type="hidden" name="seat" id="selectedSeat" />
+      <h3>Салон автомобиля (вид сверху)</h3>
+      <div class="car-seating" id="carSeating"></div>
 
-      <button type="submit">Забронировать</button>
-      <button type="button" id="salonButton">Забронировать весь салон</button>
+      <button id="confirmBooking">Забронировать</button>
       <p id="status"></p>
-    </form>
+    </section>
+
+    <section>
+      <h2>Ближайшие водители</h2>
+      <div id="drivers"></div>
+    </section>
   </main>
 
-  <footer class="footer">
-    <p>&copy; Межгород 2025</p>
-  </footer>
-
-  <script src="script.js"></script>
+  <script src="passenger.js"></script>
 </body>
 </html>
