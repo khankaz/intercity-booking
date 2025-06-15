@@ -2,30 +2,43 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Кабинет водителя</title>
+  <title>Водитель – Управление рейсами</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Кабинет водителя</h1>
-    <form id="loginForm">
-      <input type="tel" placeholder="Введите номер телефона" required>
-      <button type="submit">Получить код</button>
-    </form>
+  <header class="header">
+    <h1>Водитель</h1>
+    <p>Создайте и управляйте своими поездками</p>
+  </header>
 
-    <div id="tripForm" style="display:none;">
+  <main class="container">
+    <section class="driver-create">
       <h2>Создать поездку</h2>
-      <select id="carType">
-        <option value="sedan">Седан</option>
-        <option value="crossover">Кроссовер</option>
-        <option value="minivan6">Минивэн (6 мест)</option>
-        <option value="minivan7">Минивэн (7 мест)</option>
-      </select>
-      <input type="date" id="tripDate" required>
-      <input type="time" id="tripTime" required>
-      <button id="startTrip">Создать поездку</button>
-    </div>
-  </div>
+      <form id="createTripForm">
+        <input type="text" id="routeInput" placeholder="Маршрут (например: Караганда → Астана)" required>
+        <input type="date" id="dateInput" required>
+        <input type="time" id="timeInput" required>
+        <select id="carTypeInput" required>
+          <option value="sedan">Седан (4 места)</option>
+          <option value="crossover">Кроссовер (5 мест)</option>
+          <option value="crossover6">Кроссовер 6 мест</option>
+          <option value="minivan6">Минивэн 6 мест</option>
+          <option value="minivan7">Минивэн 7 мест</option>
+        </select>
+        <button type="submit">Создать</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Мои поездки</h2>
+      <div id="driverTrips"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; Межгород 2025</p>
+  </footer>
 
   <script src="script_driver.js"></script>
 </body>
