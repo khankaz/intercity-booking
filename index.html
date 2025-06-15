@@ -3,55 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Межгород Караганда – Астана – Боровое</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>Межгород: Водитель или Пассажир</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="header">
-    <h1>Бронирование поездок</h1>
-    <p>Караганда – Астана – Боровое</p>
+    <h1>Межгород Караганда — Астана — Бурабай</h1>
+    <p>Выберите роль:</p>
   </header>
 
   <main class="container">
-    <section class="booking">
-      <h2>Выберите маршрут и места</h2>
-      <form id="bookingForm">
-        <label>Ваше имя:</label>
-        <input type="text" name="name" placeholder="Имя" required>
-
-        <label>Телефон:</label>
-        <input type="tel" name="phone" placeholder="+7..." required>
-
-        <label>Адрес посадки:</label>
-        <input type="text" name="address" placeholder="Где вас забрать?" required>
-
-        <label>Тип машины:</label>
-        <select id="carType">
-          <option value="sedan">Седан</option>
-          <option value="crossover">Кроссовер</option>
-          <option value="minivan6">Минивэн (6 мест)</option>
-          <option value="minivan7">Минивэн (7 мест)</option>
-        </select>
-
-        <label>Маршрут:</label>
-        <select id="routeSelect"></select>
-
-        <div id="seatContainer" class="seating-map"></div>
-
-        <div class="buttons">
-          <button type="button" id="selectAllSeats">Выбрать все места</button>
-          <button type="submit">Забронировать</button>
-          <button type="button" id="salonButton">Бронь всего салона</button>
-        </div>
-      </form>
-    </section>
+    <div class="role-buttons">
+      <a href="driver.html" class="button">Я водитель</a>
+      <a href="passenger.html" class="button">Я пассажир</a>
+    </div>
   </main>
 
   <footer class="footer">
-    <p>&copy; Межгород, 2025</p>
+    <p>&copy; Межгород 2025</p>
   </footer>
-
-  <script src="script.js"></script>
 </body>
 </html>
