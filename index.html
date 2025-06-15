@@ -2,15 +2,32 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Межгород вход</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Авторизация</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="style.css" rel="stylesheet">
 </head>
 <body>
-  <div class="center">
-    <h1>Выберите роль</h1>
-    <a class="btn" href="driver.html">Водитель</a>
-    <a class="btn" href="passenger.html">Пассажир</a>
+  <div class="auth-container">
+    <h1>Вход по номеру</h1>
+    <form>
+      <input type="tel" placeholder="Введите номер WhatsApp" required>
+      <button type="button" onclick="sendCode()">Получить код</button>
+      <input type="text" placeholder="Введите код из WhatsApp" required>
+      <select>
+        <option disabled selected>Выберите маршрут</option>
+        <option>Караганда – Астана</option>
+        <option>Караганда – Щучинск</option>
+        <option>Караганда – Бурабай</option>
+        <option>Астана – Караганда</option>
+        <option>Щучинск – Караганда</option>
+        <option>Бурабай – Караганда</option>
+      </select>
+      <button type="submit">Войти</button>
+    </form>
+    <div class="role-links">
+      <p>Или выберите страницу:</p>
+      <a href="passenger.html">Я пассажир</a> | <a href="driver.html">Я водитель</a>
+    </div>
   </div>
 </body>
 </html>
