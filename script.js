@@ -1,51 +1,80 @@
-// Авторизация через код
-const sendCodeBtn = document.getElementById("sendCode");
-const authForm = document.getElementById("authForm");
+const carLayouts = {
+  sedan: ['1', '2', '3', '4', '5'], // без водителя
+  crossover: ['1', '2', '3', '4', '5'],
+  crossover6: ['1', '2', '3', '4', '5', '6'],
+  minivan6: ['1', '2', '3', '4', '5', '6'],
+  minivan7: ['1', '2', '3', '4', '5', '6', '7'],
+};
 
-if (sendCodeBtn && authForm) {
-  let generatedCode = null;
+const bookedSeats = {}; // структура хранения брони
 
-  sendCodeBtn.addEventListener("click", () => {
-    const phone = document.getElementById("phone").value;
-    if (!phone) {
-      alert("Введите номер телефона");
-      return;
+const form = document.getElementById("bookingForm");
+const seatContainer = document.getElementById("seatMapContainer");
+const selectedSeatInput = document.getElementById("selectedSeat");
+const carTypeSelect = document.getElementById("carType");
+const routeSelect = document.getElementById("routeSelect");
+
+function getRouteKey() {
+  return `${routeSelect.value}-${carTypeSelect.value}`;
+}
+
+function generateSeats(carType) {
+  const routeKey = getRouteKey();
+  const layout = carLayouts[carType];
+  seatContainer.innerHTML = '<p>Выберите место:</p><div class="seats">';
+
+  layout.forEach((seat) => {
+    const isBooked = bookedSeats[routeKey]?.includes(seat);
+    const seatDiv = document.createElement('div');
+    seatDiv.className = `seat ${isBooked ? 'booked' : ''}`;
+    seatDiv.textContent = seat;
+    seatDiv.dataset.seat = seat;
+    if (!isBooked) {
+      seatDiv.addEventListener('click', () => {
+        document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+        seatDiv.classList.add('selected');
+        selectedSeatInput.value = seat;
+      });
     }
-
-    generatedCode = Math.floor(100000 + Math.random() * 900000); // 6-значный код
-    console.log("Код для WhatsApp:", generatedCode); // ⚠️ Здесь интеграция с WhatsApp API позже
-
-    document.getElementById("code").style.display = "block";
-    document.getElementById("loginButton").style.display = "block";
-    document.getElementById("authStatus").textContent = "Код отправлен. Введите его ниже.";
+    seatContainer.querySelector('.seats')?.appendChild(seatDiv);
   });
 
-  authForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const userCode = document.getElementById("code").value;
-    if (userCode == generatedCode) {
-      document.getElementById("authStatus").textContent = "Успешный вход!";
-      // Перенаправить на нужную страницу
-      window.location.href = "index.html"; // или другой путь
-    } else {
-      document.getElementById("authStatus").textContent = "Неверный код, попробуйте ещё раз.";
-    }
-  });
-}
-// Сохраняем заявки пассажиров
-if (passengerForm) {
-  passengerForm.addEventListener("submit", function () {
-    const passengers = JSON.parse(localStorage.getItem("passengers")) || [];
-    passengers.push({ name, phone, pickup, route, date, seat });
-    localStorage.setItem("passengers", JSON.stringify(passengers));
-  });
+  seatContainer.innerHTML += '</div>';
 }
 
-// Сохраняем поездки водителей
-if (driverForm) {
-  driverForm.addEventListener("submit", function () {
-    const drivers = JSON.parse(localStorage.getItem("drivers")) || [];
-    drivers.push({ driverName, driverPhone, route, date, time });
-    localStorage.setItem("drivers", JSON.stringify(drivers));
-  });
-}
+carTypeSelect.addEventListener("change", () => {
+  generateSeats(carTypeSelect.value);
+});
+
+routeSelect.addEventListener("change", () => {
+  generateSeats(carTypeSelect.value);
+});
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  const routeKey = getRouteKey();
+  const seat = selectedSeatInput.value;
+  if (!seat) {
+    alert("Выберите место.");
+    return;
+  }
+
+  bookedSeats[routeKey] = bookedSeats[routeKey] || [];
+  if (!bookedSeats[routeKey].includes(seat)) {
+    bookedSeats[routeKey].push(seat);
+    document.getElementById("status").textContent = "Место успешно забронировано.";
+    generateSeats(carTypeSelect.value);
+    form.reset();
+  } else {
+    document.getElementById("status").textContent = "Место уже занято.";
+  }
+});
+
+document.getElementById("salonButton").addEventListener("click", function () {
+  const routeKey = getRouteKey();
+  const layout = carLayouts[carTypeSelect.value];
+  bookedSeats[routeKey] = [...layout];
+  document.getElementById("status").textContent = "Весь салон успешно забронирован.";
+  generateSeats(carTypeSelect.value);
+  form.reset();
+});
