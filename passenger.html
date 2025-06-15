@@ -1,55 +1,105 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Пассажир – Бронирование</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="style.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Бронирование поездки</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="auth-container">
-    <h1>Бронирование поездки</h1>
-    <form id="passengerForm">
-      <input type="text" placeholder="Ваше имя" name="name" required>
-      <input type="tel" placeholder="Номер WhatsApp" name="phone" required>
-      <select name="route" required>
-        <option disabled selected>Выберите маршрут</option>
-        <option>Караганда – Астана</option>
-        <option>Караганда – Щучинск</option>
-        <option>Караганда – Бурабай</option>
-        <option>Астана – Караганда</option>
-        <option>Щучинск – Караганда</option>
-        <option>Бурабай – Караганда</option>
-      </select>
-      <input type="text" name="address" placeholder="Ваш адрес посадки" required>
-      <input type="date" name="date" required>
+  <header class="header">
+    <h1>Бронирование места</h1>
+    <p>Выберите маршрут, дату и место</p>
+  </header>
 
-      <label for="seat">Выберите место:</label>
-      <select name="seat" id="seat" required>
-        <option value="1">Переднее пассажирское</option>
-        <option value="2">Задний ряд – слева</option>
-        <option value="3">Задний ряд – центр</option>
-        <option value="4">Задний ряд – справа</option>
-      </select>
+  <main class="container">
+    <section class="booking">
+      <form id="passengerForm">
+        <label>Имя:</label>
+        <input type="text" id="name" required>
 
-      <button type="submit">Забронировать место</button>
-      <button type="button" id="salonButton">Забронировать весь салон</button>
-    </form>
+        <label>Номер WhatsApp:</label>
+        <input type="tel" id="phone" required>
 
-    <p id="status"></p>
-  </div>
+        <label>Адрес посадки:</label>
+        <input type="text" id="address" required>
+
+        <label>Маршрут:</label>
+        <select id="route">
+          <option value="karaganda-astana">Караганда — Астана</option>
+          <option value="astana-karaganda">Астана — Караганда</option>
+          <option value="karaganda-burabay">Караганда — Бурабай</option>
+          <option value="shchuchinsk">Щучинск</option>
+        </select>
+
+        <label>Дата поездки:</label>
+        <input type="date" id="date" required>
+
+        <label>Выберите место:</label>
+        <div class="seating-map" id="seats"></div>
+
+        <div class="buttons">
+          <button type="submit">Забронировать место</button>
+          <button type="button" id="bookFull">Забронировать весь салон</button>
+        </div>
+      </form>
+
+      <p id="status"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; Межгород, 2025</p>
+  </footer>
 
   <script>
-    document.getElementById("passengerForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      document.getElementById("status").textContent = "Ваше место успешно забронировано!";
-      this.reset();
-    });
+    const seatsEl = document.getElementById("seats");
+    const status = document.getElementById("status");
+    const form = document.getElementById("passengerForm");
+    const routeInput = document.getElementById("route");
+    const dateInput = document.getElementById("date");
 
-    document.getElementById("salonButton").addEventListener("click", function () {
-      document.getElementById("status").textContent = "Весь салон успешно забронирован!";
-      document.getElementById("passengerForm").reset();
-    });
-  </script>
-</body>
-</html>
+    let selectedSeat = null;
+    let totalSeats = 6;
+    let bookedSeats = [];
+
+    function renderSeats() {
+      seatsEl.innerHTML = "";
+      for (let i = 1; i <= totalSeats; i++) {
+        const div = document.createElement("div");
+        div.className = "seat";
+        div.textContent = `Место ${i}`;
+
+        if (bookedSeats.includes(i)) {
+          div.classList.add("booked");
+          div.textContent = `Занято`;
+        } else if (selectedSeat === i) {
+          div.classList.add("selected");
+        }
+
+        if (!bookedSeats.includes(i)) {
+          div.addEventListener("click", () => {
+            selectedSeat = i;
+            renderSeats();
+          });
+        }
+
+        seatsEl.appendChild(div);
+      }
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!selectedSeat) {
+        alert("Выберите место!");
+        return;
+      }
+
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const address = document.getElementById("address").value;
+      const route = routeInput.value;
+      const date = dateInput.value;
+
+      status.textContent = `✅ ${name}, вы забронировали место ${selectedS
