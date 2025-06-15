@@ -1,49 +1,50 @@
-const routes = [
-  { name: "Караганда → Астана", seats: 4, booked: [
-    { name: "Айгүл", phone: "+77012345678", address: "Абая 12", seat: 2 },
-    { name: "Марат", phone: "+77022334455", address: "Космонавтов 8", seat: 3 }
-  ], status: "ожидание" },
-  { name: "Астана → Боровое", seats: 4, booked: [], status: "ожидание" },
-  { name: "Боровое → Караганда", seats: 4, booked: [], status: "ожидание" }
-];
-
-function renderDashboard() {
-  const container = document.getElementById("driverDashboard");
-  container.innerHTML = "";
-
-  routes.forEach((route, idx) => {
-    const card = document.createElement("div");
-    card.className = "route-card";
-
-    let passengers = "";
-    if (route.booked.length > 0) {
-      passengers = route.booked.map((p, i) => `
-        <li>
-          <strong>${p.name}</strong> — ${p.phone}<br>
-          Адрес: ${p.address}<br>
-          Место №${p.seat}
-        </li>
-      `).join("");
-    } else {
-      passengers = "<li>Пока нет пассажиров</li>";
-    }
-
-    card.innerHTML = `
-      <h3>${route.name}</h3>
-      <p>Статус: <strong>${route.status}</strong></p>
-      <ul>${passengers}</ul>
-      <button onclick="changeStatus(${idx}, 'поездка началась')">Старт</button>
-      <button onclick="changeStatus(${idx}, 'в пути')">В пути</button>
-      <button onclick="changeStatus(${idx}, 'завершено')">Завершено</button>
-    `;
-
-    container.appendChild(card);
-  });
+// Простая защита
+const access = prompt("Введите админ-пароль:");
+if (access !== "1234") {
+  alert("Доступ запрещён");
+  document.body.innerHTML = "<h2 style='text-align:center;color:red'>Нет доступа</h2>";
+  throw new Error("Unauthorized");
 }
 
-function changeStatus(index, newStatus) {
-  routes[index].status = newStatus;
-  renderDashboard();
+// Загрузка данных
+const passengers = JSON.parse(localStorage.getItem("passengers")) || [];
+const drivers = JSON.parse(localStorage.getItem("drivers")) || [];
+
+const passengerList = document.getElementById("passengerList");
+const driverList = document.getElementById("driverList");
+
+// Отображение пассажиров
+passengers.forEach((p, i) => {
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <strong>${p.name}</strong> (${p.phone})<br>
+    Маршрут: ${p.route} — Место посадки: ${p.pickup}<br>
+    Дата: ${p.date} — Место: ${p.seat}
+    <button onclick="removePassenger(${i})">Удалить</button>
+  `;
+  passengerList.appendChild(li);
+});
+
+// Отображение водителей
+drivers.forEach((d, i) => {
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <strong>${d.driverName}</strong> (${d.driverPhone})<br>
+    Маршрут: ${d.route} — ${d.date} ${d.time}
+    <button onclick="removeDriver(${i})">Удалить</button>
+  `;
+  driverList.appendChild(li);
+});
+
+// Удаление
+function removePassenger(index) {
+  passengers.splice(index, 1);
+  localStorage.setItem("passengers", JSON.stringify(passengers));
+  location.reload();
 }
 
-renderDashboard();
+function removeDriver(index) {
+  drivers.splice(index, 1);
+  localStorage.setItem("drivers", JSON.stringify(drivers));
+  location.reload();
+}
