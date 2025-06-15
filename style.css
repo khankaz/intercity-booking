@@ -1,110 +1,31 @@
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #f5f5f5;
-  color: #333;
-}
-
-.header {
-  background: #1a73e8;
-  color: white;
-  text-align: center;
-  padding: 1.5rem 1rem;
-}
-
-.container {
-  padding: 1rem;
-  max-width: 800px;
-  margin: auto;
-}
-
-.routes, .booking {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  padding: 1rem;
-  margin-bottom: 2rem;
-}
-
-.routes h2, .booking h2 {
-  margin-top: 0;
-}
-
-form input, form select, form button {
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-form button {
-  background: #1a73e8;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-form button:hover {
-  background: #125acc;
-}
-
-.footer {
-  text-align: center;
-  font-size: 0.875rem;
-  color: #666;
-  padding: 1rem 0;
-}
-
-.route-card {
-  background: #e9f0fb;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-/* Стили визуального отображения мест */
-#seatMapContainer {
-  margin-top: 1rem;
-}
-
-.seats {
+.car-seating {
   display: grid;
   grid-template-columns: repeat(3, 60px);
   gap: 10px;
   justify-content: center;
-  margin-top: 1rem;
+  margin: 20px 0;
 }
 
 .seat {
   width: 60px;
   height: 60px;
-  background: #e0e0e0;
-  border-radius: 6px;
+  background-color: #d0eaff;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-weight: 600;
+  align-items: center;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
   user-select: none;
-  transition: background 0.2s ease;
-}
-
-.seat:hover {
-  background: #cfd8dc;
-}
-
-.seat.booked {
-  background: #9e9e9e;
-  cursor: not-allowed;
-  color: #fff;
+  border: 2px solid transparent;
 }
 
 .seat.selected {
-  background: #1a73e8;
+  background-color: #1a73e8;
   color: white;
-  border: 2px solid #125acc;
+}
+
+.seat.booked {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
