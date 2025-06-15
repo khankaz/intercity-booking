@@ -2,21 +2,25 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Кабинет пассажира</title>
+  <title>Пассажир – Бронирование поездки</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Поездки и бронь</h1>
-    <form id="loginForm">
-      <input type="tel" placeholder="Введите номер телефона" required>
-      <button type="submit">Получить код</button>
-    </form>
+  <header class="header">
+    <h1>Поездки для пассажиров</h1>
+    <p>Выберите маршрут и место</p>
+  </header>
 
-    <div id="bookingArea" style="display:none;">
+  <main class="container">
+    <section>
       <div id="tripList"></div>
-    </div>
-  </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; Межгород 2025</p>
+  </footer>
 
   <script src="script_passenger.js"></script>
 </body>
