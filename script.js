@@ -1,135 +1,138 @@
 const routes = [
-  { name: "Караганда → Астана", seats: 4, bookedSeats: [], status: "Ожидание", vehicle: "sedan" },
-  { name: "Астана → Боровое", seats: 6, bookedSeats: [], status: "Ожидание", vehicle: "crossover" },
-  { name: "Боровое → Караганда", seats: 7, bookedSeats: [], status: "Ожидание", vehicle: "minivan" }
+  { name: "Караганда → Астана", seats: 6, booked: [] },
+  { name: "Астана → Караганда", seats: 6, booked: [] },
+  { name: "Караганда → Бурабай", seats: 6, booked: [] },
+  { name: "Бурабай → Караганда", seats: 6, booked: [] },
+  { name: "Караганда → Щучинск", seats: 6, booked: [] },
+  { name: "Щучинск → Караганда", seats: 6, booked: [] }
 ];
 
-// Определение компоновки сидений по типу машины
-const vehicleLayout = {
-  sedan: ["1", "2", "3", "4"],
-  crossover: ["1", "2", "3", "4", "5", "6"],
-  minivan: ["1", "2", "3", "4", "5", "6", "7"]
+const seatLayouts = {
+  sedan: [
+    { id: "1", label: "Переднее пассажирское" },
+    { id: "2", label: "Заднее слева" },
+    { id: "3", label: "Заднее по центру" },
+    { id: "4", label: "Заднее справа" }
+  ],
+  crossover: [
+    { id: "1", label: "Переднее пассажирское" },
+    { id: "2", label: "Заднее слева" },
+    { id: "3", label: "Заднее по центру" },
+    { id: "4", label: "Заднее справа" }
+  ],
+  minivan6: [
+    { id: "1", label: "Переднее пассажирское" },
+    { id: "2", label: "2-й ряд слева" },
+    { id: "3", label: "2-й ряд по центру" },
+    { id: "4", label: "2-й ряд справа" },
+    { id: "5", label: "3-й ряд слева" },
+    { id: "6", label: "3-й ряд справа" }
+  ],
+  minivan7: [
+    { id: "1", label: "Переднее пассажирское" },
+    { id: "2", label: "2-й ряд слева" },
+    { id: "3", label: "2-й ряд по центру" },
+    { id: "4", label: "2-й ряд справа" },
+    { id: "5", label: "3-й ряд слева" },
+    { id: "6", label: "3-й ряд по центру" },
+    { id: "7", label: "3-й ряд справа" }
+  ]
 };
 
-function showPassenger() {
-  document.getElementById("passengerSection").classList.remove("hidden");
-  document.getElementById("driverSection").classList.add("hidden");
-  renderRoutes();
-  renderSeatOptions();
-}
-
-function showDriver() {
-  document.getElementById("driverSection").classList.remove("hidden");
-  document.getElementById("passengerSection").classList.add("hidden");
-  renderDriverRoutes();
-  updateSeatView(0);
-}
+let currentLayout = seatLayouts.sedan;
 
 function renderRoutes() {
-  const select = document.getElementById("routeSelect");
-  const container = document.getElementById("routes");
-  select.innerHTML = "";
-  container.innerHTML = "";
-
-  routes.forEach((route, i) => {
-    const freeSeats = route.seats - route.bookedSeats.length;
+  const routeSelect = document.getElementById("routeSelect");
+  routeSelect.innerHTML = "";
+  routes.forEach((route, index) => {
     const option = document.createElement("option");
-    option.value = i;
-    option.textContent = `${route.name} — свободно: ${freeSeats}`;
-    select.appendChild(option);
-
-    const card = document.createElement("div");
-    card.className = "route-card";
-    card.innerHTML = `<strong>${route.name}</strong><br>Свободных мест: ${freeSeats}<br>Статус: ${route.status}`;
-    container.appendChild(card);
+    const freeSeats = currentLayout.length - route.booked.length;
+    option.value = index;
+    option.textContent = `${route.name} (осталось мест: ${freeSeats})`;
+    routeSelect.appendChild(option);
   });
 }
 
-function renderDriverRoutes() {
-  const select = document.getElementById("driverRouteSelect");
-  select.innerHTML = "";
-  routes.forEach((r, i) => {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.textContent = `${r.name}`;
-    select.appendChild(opt);
-  });
-}
+function renderSeats() {
+  const seatContainer = document.getElementById("seatContainer");
+  seatContainer.innerHTML = "";
+  const routeIndex = parseInt(document.getElementById("routeSelect").value);
+  const bookedSeats = routes[routeIndex].booked;
 
-function renderSeatOptions() {
-  const routeIndex = document.getElementById("routeSelect").value || 0;
-  const route = routes[routeIndex];
-  const layout = vehicleLayout[route.vehicle];
-  const seatSelect = document.getElementById("seatSelect");
-  seatSelect.innerHTML = "";
+  currentLayout.forEach(seat => {
+    const seatDiv = document.createElement("div");
+    seatDiv.className = "seat";
+    seatDiv.textContent = seat.label;
+    seatDiv.dataset.id = seat.id;
 
-  layout.forEach(seat => {
-    const isBooked = route.bookedSeats.includes(seat);
-    if (!isBooked) {
-      const opt = document.createElement("option");
-      opt.value = seat;
-      opt.textContent = `Место ${seat}`;
-      seatSelect.appendChild(opt);
+    if (bookedSeats.includes(seat.id)) {
+      seatDiv.classList.add("booked");
+    } else {
+      seatDiv.addEventListener("click", function () {
+        seatDiv.classList.toggle("selected");
+      });
     }
+
+    seatContainer.appendChild(seatDiv);
   });
 }
 
-document.getElementById("routeSelect").addEventListener("change", renderSeatOptions);
+function updateCarType() {
+  const carType = document.getElementById("carType").value;
+  currentLayout = seatLayouts[carType];
+  renderRoutes();
+  renderSeats();
+}
+
+document.getElementById("carType").addEventListener("change", updateCarType);
+document.getElementById("routeSelect").addEventListener("change", renderSeats);
 
 document.getElementById("bookingForm").addEventListener("submit", function (e) {
   e.preventDefault();
-  const routeIndex = +document.getElementById("routeSelect").value;
-  const seat = document.getElementById("seatSelect").value;
-  const route = routes[routeIndex];
+  const routeIndex = parseInt(document.getElementById("routeSelect").value);
+  const selectedSeats = Array.from(document.querySelectorAll(".seat.selected"))
+    .map(seat => seat.dataset.id);
 
-  if (!route.bookedSeats.includes(seat)) {
-    route.bookedSeats.push(seat);
-    document.getElementById("status").textContent = `Место ${seat} успешно забронировано!`;
-    renderRoutes();
-    renderSeatOptions();
-    updateSeatView(routeIndex);
-  } else {
-    document.getElementById("status").textContent = "Место уже занято!";
+  if (selectedSeats.length === 0) {
+    alert("Выберите хотя бы одно место.");
+    return;
   }
-  e.target.reset();
-});
 
-document.getElementById("salonButton").addEventListener("click", () => {
-  const routeIndex = +document.getElementById("routeSelect").value;
   const route = routes[routeIndex];
-  const layout = vehicleLayout[route.vehicle];
-  route.bookedSeats = [...layout];
+  const conflict = selectedSeats.some(seat => route.booked.includes(seat));
+  if (conflict) {
+    alert("Одно или несколько мест уже заняты.");
+    return;
+  }
+
+  route.booked.push(...selectedSeats);
+  alert("Бронирование успешно!");
+  this.reset();
   renderRoutes();
-  renderSeatOptions();
-  updateSeatView(routeIndex);
-  document.getElementById("status").textContent = "Весь салон забронирован!";
+  renderSeats();
 });
 
-function startTrip() {
-  const i = +document.getElementById("driverRouteSelect").value;
-  routes[i].status = "Ожидание";
-  document.getElementById("tripStatus").textContent = "Ожидание";
-  updateSeatView(i);
-}
+document.getElementById("salonButton").addEventListener("click", function () {
+  const routeIndex = parseInt(document.getElementById("routeSelect").value);
+  const allSeats = currentLayout.map(seat => seat.id);
+  routes[routeIndex].booked = [...allSeats];
+  alert("Весь салон успешно забронирован.");
+  renderRoutes();
+  renderSeats();
+});
 
-function setInTransit() {
-  const i = +document.getElementById("driverRouteSelect").value;
-  routes[i].status = "В пути";
-  document.getElementById("tripStatus").textContent = "В пути";
-  updateSeatView(i);
-}
+document.getElementById("selectAllSeats").addEventListener("click", function () {
+  const routeIndex = parseInt(document.getElementById("routeSelect").value);
+  const booked = routes[routeIndex].booked;
 
-function endTrip() {
-  const i = +document.getElementById("driverRouteSelect").value;
-  routes[i].status = "Завершено";
-  document.getElementById("tripStatus").textContent = "Завершено";
-  updateSeatView(i);
-}
+  document.querySelectorAll(".seat").forEach(seat => {
+    if (!booked.includes(seat.dataset.id)) {
+      seat.classList.add("selected");
+    }
+  });
+});
 
-function updateSeatView(routeIndex) {
-  const view = document.getElementById("seatsVisual");
-  view.innerHTML = "";
-  const route = routes[routeIndex];
-  const layout = vehicleLayout[route.vehicle];
-
-  layo
+window.addEventListener("DOMContentLoaded", () => {
+  renderRoutes();
+  renderSeats();
+});
