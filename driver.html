@@ -2,44 +2,71 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Водитель – Управление рейсами</title>
+  <title>Водитель – Контроль рейса</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link href="style.css" rel="stylesheet">
 </head>
 <body>
-  <header class="header">
-    <h1>Водитель</h1>
-    <p>Создайте и управляйте своими поездками</p>
-  </header>
+  <div class="auth-container">
+    <h1>Управление поездкой</h1>
 
-  <main class="container">
-    <section class="driver-create">
-      <h2>Создать поездку</h2>
-      <form id="createTripForm">
-        <input type="text" id="routeInput" placeholder="Маршрут (например: Караганда → Астана)" required>
-        <input type="date" id="dateInput" required>
-        <input type="time" id="timeInput" required>
-        <select id="carTypeInput" required>
-          <option value="sedan">Седан (4 места)</option>
-          <option value="crossover">Кроссовер (5 мест)</option>
-          <option value="crossover6">Кроссовер 6 мест</option>
-          <option value="minivan6">Минивэн 6 мест</option>
-          <option value="minivan7">Минивэн 7 мест</option>
-        </select>
-        <button type="submit">Создать</button>
-      </form>
-    </section>
+    <form id="driverForm">
+      <input type="text" placeholder="Ваше имя" required>
+      <input type="tel" placeholder="Номер WhatsApp" required>
 
-    <section>
-      <h2>Мои поездки</h2>
-      <div id="driverTrips"></div>
-    </section>
-  </main>
+      <select id="routeSelect" required>
+        <option disabled selected>Выберите маршрут</option>
+        <option>Караганда – Астана</option>
+        <option>Караганда – Щучинск</option>
+        <option>Караганда – Бурабай</option>
+        <option>Астана – Караганда</option>
+        <option>Щучинск – Караганда</option>
+        <option>Бурабай – Караганда</option>
+      </select>
 
-  <footer class="footer">
-    <p>&copy; Межгород 2025</p>
-  </footer>
+      <input type="date" required>
+    </form>
 
-  <script src="script_driver.js"></script>
+    <div class="status-buttons">
+      <button id="startBtn">Старт</button>
+      <button id="onTheWayBtn" disabled>В пути</button>
+      <button id="completeBtn" disabled>Завершено</button>
+    </div>
+
+    <div id="tripStatus"></div>
+
+    <div class="passenger-list">
+      <h3>Пассажиры:</h3>
+      <ul>
+        <li>Иван, +7 777 111 2233, Место 1</li>
+        <li>Айнур, +7 701 555 9988, Место 3</li>
+        <!-- Заглушка, позже можно заменить на реальную загрузку -->
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const onTheWayBtn = document.getElementById("onTheWayBtn");
+    const completeBtn = document.getElementById("completeBtn");
+    const status = document.getElementById("tripStatus");
+
+    startBtn.onclick = () => {
+      status.textContent = "Поездка началась.";
+      onTheWayBtn.disabled = false;
+      startBtn.disabled = true;
+    };
+
+    onTheWayBtn.onclick = () => {
+      status.textContent = "В пути...";
+      completeBtn.disabled = false;
+      onTheWayBtn.disabled = true;
+    };
+
+    completeBtn.onclick = () => {
+      status.textContent = "Поездка завершена.";
+      completeBtn.disabled = true;
+    };
+  </script>
 </body>
 </html>
