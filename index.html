@@ -1,39 +1,52 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Межгород: Караганда – Астана – Боровое</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Межгород Караганда – Астана – Боровое</title>
+  <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>Межгород</h1>
+  <header class="header">
+    <h1>Бронирование поездок</h1>
     <p>Караганда – Астана – Боровое</p>
   </header>
 
-  <main>
+  <main class="container">
     <section class="routes">
       <h2>Доступные маршруты</h2>
-      <div id="routesList"></div>
+      <div id="routes"></div>
     </section>
 
-    <section class="form">
-      <h2>Забронировать поездку</h2>
+    <section class="booking">
+      <h2>Забронировать место</h2>
       <form id="bookingForm">
-        <input type="text" name="name" placeholder="Имя" required>
+        <input type="text" name="name" placeholder="Ваше имя" required>
         <input type="tel" name="phone" placeholder="Номер телефона" required>
-        <select id="routeSelect" name="route" required></select>
+        <input type="text" name="address" placeholder="Адрес посадки" required>
+        <select name="route" id="routeSelect"></select>
         <input type="date" name="date" required>
+
+        <select name="carType" id="carTypeSelect">
+          <option value="sedan">Седан</option>
+          <option value="crossover4">Кроссовер (4 места)</option>
+          <option value="crossover6">Кроссовер (6 мест)</option>
+          <option value="minivan6">Минивэн (6 мест)</option>
+          <option value="minivan7">Минивэн (7 мест)</option>
+        </select>
+
+        <div id="seatMap" class="seat-map"></div>
+
         <button type="submit">Забронировать</button>
-        <p id="resultMessage"></p>
+        <button type="button" id="salonButton">Забронировать весь салон</button>
       </form>
+      <p id="status"></p>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; Межгород, 2025</p>
+  <footer class="footer">
+    <p>&copy; Межгород 2025</p>
   </footer>
 
   <script src="script.js"></script>
