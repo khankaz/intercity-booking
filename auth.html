@@ -2,116 +2,33 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Авторизация через WhatsApp</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 40px;
-      background: #f5f5f5;
-    }
-    .container {
-      max-width: 400px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input, button, select {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-    button {
-      background-color: #2b8a3e;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #237132;
-    }
-    .hidden {
-      display: none;
-    }
-    #codeDisplay {
-      background: #eee;
-      padding: 10px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 18px;
-      border-radius: 5px;
-    }
-  </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Вход через WhatsApp</h2>
-    <form id="authForm">
-      <label for="phone">Введите номер WhatsApp (начиная с +7):</label>
-      <input type="tel" id="phone" required>
+  <header class="header">
+    <h1>Вход по номеру WhatsApp</h1>
+    <p>Введите номер, чтобы получить код подтверждения</p>
+  </header>
 
-      <button type="button" id="getCodeBtn">Получить код</button>
+  <main class="container">
+    <section class="booking">
+      <form id="authForm">
+        <input type="tel" id="phone" placeholder="+7 777 123 4567" required>
+        <button type="button" id="sendCode">Получить код</button>
 
-      <div id="codeArea" class="hidden">
-        <p>Мы отправили вам код в WhatsApp (а на самом деле вот он 👇):</p>
-        <div id="codeDisplay"></div>
+        <input type="text" id="code" placeholder="Введите код" required style="display:none;">
+        <button type="submit" id="loginButton" style="display:none;">Войти</button>
+      </form>
+      <p id="authStatus"></p>
+    </section>
+  </main>
 
-        <label for="codeInput">Введите код:</label>
-        <input type="text" id="codeInput" maxlength="6" required>
+  <footer class="footer">
+    <p>&copy; Межгород 2025</p>
+  </footer>
 
-        <label for="role">Выберите роль:</label>
-        <select id="role">
-          <option value="passenger">Пассажир</option>
-          <option value="driver">Водитель</option>
-        </select>
-
-        <button type="submit">Войти</button>
-      </div>
-    </form>
-    <p id="status"></p>
-  </div>
-
-  <script>
-    let code = "";
-
-    document.getElementById("getCodeBtn").addEventListener("click", () => {
-      const phone = document.getElementById("phone").value.trim();
-      if (!phone.startsWith("+7")) {
-        alert("Введите номер в формате +7...");
-        return;
-      }
-
-      // Генерируем фейковый код
-      code = Math.floor(100000 + Math.random() * 900000).toString();
-
-      // Показываем код и поле для ввода
-      document.getElementById("codeArea").classList.remove("hidden");
-      document.getElementById("codeDisplay").textContent = code;
-    });
-
-    document.getElementById("authForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const userCode = document.getElementById("codeInput").value.trim();
-      const role = document.getElementById("role").value;
-
-      if (userCode === code) {
-        localStorage.setItem("auth", "true");
-        localStorage.setItem("role", role);
-        if (role === "driver") {
-          window.location.href = "driver.html";
-        } else {
-          window.location.href = "passenger.html";
-        }
-      } else {
-        alert("Неверный код");
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
