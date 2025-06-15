@@ -2,56 +2,15 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Межгород Караганда – Астана – Боровое</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Межгород вход</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header class="header">
-    <h1>Межгород Караганда – Астана – Боровое</h1>
-    <p>Выберите роль</p>
-  </header>
-
-  <main class="container">
-    <div class="role-select">
-      <button onclick="showPassenger()">Я пассажир</button>
-      <button onclick="showDriver()">Я водитель</button>
-    </div>
-
-    <!-- Пассажирский интерфейс -->
-    <section id="passengerSection" class="hidden">
-      <h2>Бронирование мест</h2>
-      <form id="bookingForm">
-        <input type="text" name="name" placeholder="Ваше имя" required>
-        <input type="tel" name="phone" placeholder="Номер телефона" required>
-        <input type="text" name="address" placeholder="Адрес посадки" required>
-        <select name="route" id="routeSelect"></select>
-        <input type="date" name="date" required>
-        <select name="seat" id="seatSelect"></select>
-        <button type="submit">Забронировать</button>
-        <button type="button" id="salonButton">Забронировать весь салон</button>
-      </form>
-      <p id="status"></p>
-      <div id="routes"></div>
-    </section>
-
-    <!-- Водительский интерфейс -->
-    <section id="driverSection" class="hidden">
-      <h2>Управление поездкой</h2>
-      <select id="driverRouteSelect"></select>
-      <button onclick="startTrip()">Старт</button>
-      <button onclick="setInTransit()">В пути</button>
-      <button onclick="endTrip()">Завершить</button>
-      <div id="tripStatus">Ожидание</div>
-      <div id="seatsVisual"></div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <p>&copy; Межгород 2025</p>
-  </footer>
-
-  <script src="script.js"></script>
+  <div class="center">
+    <h1>Выберите роль</h1>
+    <a class="btn" href="driver.html">Водитель</a>
+    <a class="btn" href="passenger.html">Пассажир</a>
+  </div>
 </body>
 </html>
