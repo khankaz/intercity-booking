@@ -2,26 +2,54 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Пассажир – Бронирование поездки</title>
+  <title>Пассажир – Бронирование</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link href="style.css" rel="stylesheet">
 </head>
 <body>
-  <header class="header">
-    <h1>Поездки для пассажиров</h1>
-    <p>Выберите маршрут и место</p>
-  </header>
+  <div class="auth-container">
+    <h1>Бронирование поездки</h1>
+    <form id="passengerForm">
+      <input type="text" placeholder="Ваше имя" name="name" required>
+      <input type="tel" placeholder="Номер WhatsApp" name="phone" required>
+      <select name="route" required>
+        <option disabled selected>Выберите маршрут</option>
+        <option>Караганда – Астана</option>
+        <option>Караганда – Щучинск</option>
+        <option>Караганда – Бурабай</option>
+        <option>Астана – Караганда</option>
+        <option>Щучинск – Караганда</option>
+        <option>Бурабай – Караганда</option>
+      </select>
+      <input type="text" name="address" placeholder="Ваш адрес посадки" required>
+      <input type="date" name="date" required>
 
-  <main class="container">
-    <section>
-      <div id="tripList"></div>
-    </section>
-  </main>
+      <label for="seat">Выберите место:</label>
+      <select name="seat" id="seat" required>
+        <option value="1">Переднее пассажирское</option>
+        <option value="2">Задний ряд – слева</option>
+        <option value="3">Задний ряд – центр</option>
+        <option value="4">Задний ряд – справа</option>
+      </select>
 
-  <footer class="footer">
-    <p>&copy; Межгород 2025</p>
-  </footer>
+      <button type="submit">Забронировать место</button>
+      <button type="button" id="salonButton">Забронировать весь салон</button>
+    </form>
 
-  <script src="script_passenger.js"></script>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    document.getElementById("passengerForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      document.getElementById("status").textContent = "Ваше место успешно забронировано!";
+      this.reset();
+    });
+
+    document.getElementById("salonButton").addEventListener("click", function () {
+      document.getElementById("status").textContent = "Весь салон успешно забронирован!";
+      document.getElementById("passengerForm").reset();
+    });
+  </script>
 </body>
 </html>
