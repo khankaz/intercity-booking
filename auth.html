@@ -1,67 +1,115 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Авторизация через WhatsApp</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #2b8a3e;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #237132;
+    }
+    .hidden {
+      display: none;
+    }
+    #codeDisplay {
+      background: #eee;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-  <main class="container">
-    <h1>Вход по номеру WhatsApp</h1>
-
+  <div class="container">
+    <h2>Вход через WhatsApp</h2>
     <form id="authForm">
-      <label>Номер WhatsApp (в формате +7...):</label>
+      <label for="phone">Введите номер WhatsApp (начиная с +7):</label>
       <input type="tel" id="phone" required>
 
-      <button type="button" id="sendCode">Получить код</button>
+      <button type="button" id="getCodeBtn">Получить код</button>
 
-      <div id="codeSection" style="display: none;">
-        <label>Введите код из WhatsApp:</label>
-        <input type="text" id="code" maxlength="6" required>
+      <div id="codeArea" class="hidden">
+        <p>Мы отправили вам код в WhatsApp (а на самом деле вот он 👇):</p>
+        <div id="codeDisplay"></div>
+
+        <label for="codeInput">Введите код:</label>
+        <input type="text" id="codeInput" maxlength="6" required>
+
+        <label for="role">Выберите роль:</label>
+        <select id="role">
+          <option value="passenger">Пассажир</option>
+          <option value="driver">Водитель</option>
+        </select>
+
         <button type="submit">Войти</button>
       </div>
     </form>
-
     <p id="status"></p>
-  </main>
+  </div>
 
   <script>
-    let generatedCode = "";
+    let code = "";
 
-    document.getElementById("sendCode").addEventListener("click", async () => {
-      const phone = document.getElementById("phone").value;
+    document.getElementById("getCodeBtn").addEventListener("click", () => {
+      const phone = document.getElementById("phone").value.trim();
       if (!phone.startsWith("+7")) {
         alert("Введите номер в формате +7...");
         return;
       }
 
-      // 1. Генерация кода
-      generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+      // Генерируем фейковый код
+      code = Math.floor(100000 + Math.random() * 900000).toString();
 
-      // 2. Отправка на backend
-      const res = await fetch("/api/send-whatsapp-code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, code: generatedCode })
-      });
-
-      if (res.ok) {
-        document.getElementById("codeSection").style.display = "block";
-        document.getElementById("status").textContent = "Код отправлен в WhatsApp";
-      } else {
-        document.getElementById("status").textContent = "Ошибка при отправке кода";
-      }
+      // Показываем код и поле для ввода
+      document.getElementById("codeArea").classList.remove("hidden");
+      document.getElementById("codeDisplay").textContent = code;
     });
 
     document.getElementById("authForm").addEventListener("submit", (e) => {
       e.preventDefault();
-      const inputCode = document.getElementById("code").value;
-      if (inputCode === generatedCode) {
+      const userCode = document.getElementById("codeInput").value.trim();
+      const role = document.getElementById("role").value;
+
+      if (userCode === code) {
         localStorage.setItem("auth", "true");
-        location.href = "/passenger.html"; // или /driver.html
+        localStorage.setItem("role", role);
+        if (role === "driver") {
+          window.location.href = "driver.html";
+        } else {
+          window.location.href = "passenger.html";
+        }
       } else {
-        alert("Неверный код.");
+        alert("Неверный код");
       }
     });
   </script>
