@@ -29,3 +29,53 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+const carSeating = document.getElementById("carSeating");
+const status = document.getElementById("status");
+
+const totalSeats = 6;
+let selectedSeat = null;
+
+// Допустим, места 2 и 4 уже забронированы
+const bookedSeats = [2, 4];
+
+function renderSeats() {
+  carSeating.innerHTML = "";
+
+  for (let i = 1; i <= totalSeats; i++) {
+    const seat = document.createElement("div");
+    seat.className = "seat";
+    seat.textContent = i;
+
+    if (bookedSeats.includes(i)) {
+      seat.classList.add("booked");
+    } else {
+      seat.addEventListener("click", () => {
+        document.querySelectorAll(".seat").forEach(s => s.classList.remove("selected"));
+        seat.classList.add("selected");
+        selectedSeat = i;
+      });
+    }
+
+    carSeating.appendChild(seat);
+  }
+
+  // Добавляем водителя (визуально)
+  const driver = document.createElement("div");
+  driver.className = "seat";
+  driver.textContent = "🚗";
+  driver.style.backgroundColor = "#333";
+  driver.style.color = "#fff";
+  driver.style.gridColumn = "span 3";
+  driver.style.cursor = "default";
+  carSeating.insertBefore(driver, carSeating.firstChild);
+}
+
+renderSeats();
+
+document.getElementById("confirmBooking").addEventListener("click", () => {
+  if (!selectedSeat) {
+    status.textContent = "Пожалуйста, выберите место.";
+    return;
+  }
+  status.textContent = `Вы забронировали место №${selectedSeat}`;
+});
