@@ -1,72 +1,114 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Водитель – Контроль рейса</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="style.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Панель Водителя</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="auth-container">
-    <h1>Управление поездкой</h1>
+  <header class="header">
+    <h1>Панель Водителя</h1>
+    <p>Управление маршрутами и пассажирами</p>
+  </header>
 
-    <form id="driverForm">
-      <input type="text" placeholder="Ваше имя" required>
-      <input type="tel" placeholder="Номер WhatsApp" required>
+  <main class="container">
+    <section class="booking">
+      <h2>Выберите маршрут и дату</h2>
+      <form id="driverForm">
+        <label>Маршрут:</label>
+        <select id="driverRouteSelect">
+          <option value="karaganda-astana">Караганда — Астана</option>
+          <option value="astana-karaganda">Астана — Караганда</option>
+          <option value="karaganda-burabay">Караганда — Бурабай</option>
+          <option value="shchuchinsk">Щучинск</option>
+        </select>
 
-      <select id="routeSelect" required>
-        <option disabled selected>Выберите маршрут</option>
-        <option>Караганда – Астана</option>
-        <option>Караганда – Щучинск</option>
-        <option>Караганда – Бурабай</option>
-        <option>Астана – Караганда</option>
-        <option>Щучинск – Караганда</option>
-        <option>Бурабай – Караганда</option>
-      </select>
+        <label>Дата отправления:</label>
+        <input type="date" id="driverDate" required>
 
-      <input type="date" required>
-    </form>
+        <div class="buttons">
+          <button type="button" id="startTrip">Старт рейса</button>
+          <button type="button" id="endTrip" disabled>Завершить рейс</button>
+        </div>
+      </form>
+    </section>
 
-    <div class="status-buttons">
-      <button id="startBtn">Старт</button>
-      <button id="onTheWayBtn" disabled>В пути</button>
-      <button id="completeBtn" disabled>Завершено</button>
-    </div>
-
-    <div id="tripStatus"></div>
-
-    <div class="passenger-list">
-      <h3>Пассажиры:</h3>
-      <ul>
-        <li>Иван, +7 777 111 2233, Место 1</li>
-        <li>Айнур, +7 701 555 9988, Место 3</li>
-        <!-- Заглушка, позже можно заменить на реальную загрузку -->
+    <section class="booking">
+      <h2>Список пассажиров</h2>
+      <ul id="passengerList">
+        <li>Нет данных. Пожалуйста, выберите маршрут и дату.</li>
       </ul>
-    </div>
-  </div>
+
+      <h2>Схема рассадки</h2>
+      <div id="driverSeatMap" class="seating-map"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; Межгород, 2025</p>
+  </footer>
 
   <script>
-    const startBtn = document.getElementById("startBtn");
-    const onTheWayBtn = document.getElementById("onTheWayBtn");
-    const completeBtn = document.getElementById("completeBtn");
-    const status = document.getElementById("tripStatus");
+    const passengersDB = {
+      "karaganda-astana": {
+        "2025-06-16": [
+          { name: "Аружан", seat: 1, phone: "+77001234567", address: "Проспект Назарбаева" },
+          { name: "Айдар", seat: 2, phone: "+77007654321", address: "ТД Арбат" }
+        ]
+      }
+    };
 
-    startBtn.onclick = () => {
-      status.textContent = "Поездка началась.";
-      onTheWayBtn.disabled = false;
+    const seatMapContainer = document.getElementById("driverSeatMap");
+    const passengerList = document.getElementById("passengerList");
+    const driverRouteSelect = document.getElementById("driverRouteSelect");
+    const driverDateInput = document.getElementById("driverDate");
+    const startBtn = document.getElementById("startTrip");
+    const endBtn = document.getElementById("endTrip");
+
+    function renderDriverSeats(routeKey, dateKey) {
+      seatMapContainer.innerHTML = "";
+      passengerList.innerHTML = "";
+
+      const passengers = (passengersDB[routeKey] && passengersDB[routeKey][dateKey]) || [];
+
+      if (passengers.length === 0) {
+        passengerList.innerHTML = "<li>Пассажиров нет.</li>";
+        return;
+      }
+
+      passengers.forEach(p => {
+        const li = document.createElement("li");
+        li.textContent = `${p.name}, место ${p.seat}, ${p.phone}, адрес: ${p.address}`;
+        passengerList.appendChild(li);
+
+        const seatDiv = document.createElement("div");
+        seatDiv.className = "seat booked";
+        seatDiv.textContent = `Место ${p.seat}: ${p.name}`;
+        seatMapContainer.appendChild(seatDiv);
+      });
+    }
+
+    startBtn.addEventListener("click", () => {
+      const routeKey = driverRouteSelect.value;
+      const dateKey = driverDateInput.value;
+
+      if (!routeKey || !dateKey) {
+        alert("Выберите маршрут и дату.");
+        return;
+      }
+
+      renderDriverSeats(routeKey, dateKey);
       startBtn.disabled = true;
-    };
+      endBtn.disabled = false;
+    });
 
-    onTheWayBtn.onclick = () => {
-      status.textContent = "В пути...";
-      completeBtn.disabled = false;
-      onTheWayBtn.disabled = true;
-    };
-
-    completeBtn.onclick = () => {
-      status.textContent = "Поездка завершена.";
-      completeBtn.disabled = true;
-    };
+    endBtn.addEventListener("click", () => {
+      alert("Рейс завершен.");
+      startBtn.disabled = false;
+      endBtn.disabled = true;
+    });
   </script>
 </body>
 </html>
