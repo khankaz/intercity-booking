@@ -32,3 +32,20 @@ if (sendCodeBtn && authForm) {
     }
   });
 }
+// Сохраняем заявки пассажиров
+if (passengerForm) {
+  passengerForm.addEventListener("submit", function () {
+    const passengers = JSON.parse(localStorage.getItem("passengers")) || [];
+    passengers.push({ name, phone, pickup, route, date, seat });
+    localStorage.setItem("passengers", JSON.stringify(passengers));
+  });
+}
+
+// Сохраняем поездки водителей
+if (driverForm) {
+  driverForm.addEventListener("submit", function () {
+    const drivers = JSON.parse(localStorage.getItem("drivers")) || [];
+    drivers.push({ driverName, driverPhone, route, date, time });
+    localStorage.setItem("drivers", JSON.stringify(drivers));
+  });
+}
