@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Межгород Караганда — Астана — Боровое</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Межгород: Караганда – Астана – Боровое</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
-    <h1>Бронирование межгород</h1>
-    <p>Караганда — Астана — Боровое</p>
+    <h1>Межгород</h1>
+    <p>Караганда – Астана – Боровое</p>
   </header>
 
   <main>
-    <section>
+    <section class="routes">
       <h2>Доступные маршруты</h2>
-      <ul id="routes"></ul>
+      <div id="routesList"></div>
     </section>
 
-    <section>
-      <h2>Бронирование</h2>
+    <section class="form">
+      <h2>Забронировать поездку</h2>
       <form id="bookingForm">
-        <label>Имя: <input type="text" name="name" required /></label><br/>
-        <label>Номер телефона: <input type="tel" name="phone" required /></label><br/>
-        <label>Маршрут:
-          <select name="route" id="routeSelect"></select>
-        </label><br/>
-        <label>Дата: <input type="date" name="date" required /></label><br/>
+        <input type="text" name="name" placeholder="Имя" required>
+        <input type="tel" name="phone" placeholder="Номер телефона" required>
+        <select id="routeSelect" name="route" required></select>
+        <input type="date" name="date" required>
         <button type="submit">Забронировать</button>
+        <p id="resultMessage"></p>
       </form>
-      <p id="status"></p>
     </section>
   </main>
+
+  <footer>
+    <p>&copy; Межгород, 2025</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
