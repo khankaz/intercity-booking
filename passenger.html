@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Кабинет пассажира</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Поездки и бронь</h1>
+    <form id="loginForm">
+      <input type="tel" placeholder="Введите номер телефона" required>
+      <button type="submit">Получить код</button>
+    </form>
+
+    <div id="bookingArea" style="display:none;">
+      <div id="tripList"></div>
+    </div>
+  </div>
+
+  <script src="script_passenger.js"></script>
+</body>
+</html>
