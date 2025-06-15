@@ -2,32 +2,56 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Авторизация</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="style.css" rel="stylesheet">
+  <title>Межгород Караганда – Астана – Боровое</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="auth-container">
-    <h1>Вход по номеру</h1>
-    <form>
-      <input type="tel" placeholder="Введите номер WhatsApp" required>
-      <button type="button" onclick="sendCode()">Получить код</button>
-      <input type="text" placeholder="Введите код из WhatsApp" required>
-      <select>
-        <option disabled selected>Выберите маршрут</option>
-        <option>Караганда – Астана</option>
-        <option>Караганда – Щучинск</option>
-        <option>Караганда – Бурабай</option>
-        <option>Астана – Караганда</option>
-        <option>Щучинск – Караганда</option>
-        <option>Бурабай – Караганда</option>
-      </select>
-      <button type="submit">Войти</button>
-    </form>
-    <div class="role-links">
-      <p>Или выберите страницу:</p>
-      <a href="passenger.html">Я пассажир</a> | <a href="driver.html">Я водитель</a>
-    </div>
-  </div>
+  <header class="header">
+    <h1>Бронирование поездок</h1>
+    <p>Караганда – Астана – Боровое</p>
+  </header>
+
+  <main class="container">
+    <section class="booking">
+      <h2>Выберите маршрут и места</h2>
+      <form id="bookingForm">
+        <label>Ваше имя:</label>
+        <input type="text" name="name" placeholder="Имя" required>
+
+        <label>Телефон:</label>
+        <input type="tel" name="phone" placeholder="+7..." required>
+
+        <label>Адрес посадки:</label>
+        <input type="text" name="address" placeholder="Где вас забрать?" required>
+
+        <label>Тип машины:</label>
+        <select id="carType">
+          <option value="sedan">Седан</option>
+          <option value="crossover">Кроссовер</option>
+          <option value="minivan6">Минивэн (6 мест)</option>
+          <option value="minivan7">Минивэн (7 мест)</option>
+        </select>
+
+        <label>Маршрут:</label>
+        <select id="routeSelect"></select>
+
+        <div id="seatContainer" class="seating-map"></div>
+
+        <div class="buttons">
+          <button type="button" id="selectAllSeats">Выбрать все места</button>
+          <button type="submit">Забронировать</button>
+          <button type="button" id="salonButton">Бронь всего салона</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; Межгород, 2025</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
