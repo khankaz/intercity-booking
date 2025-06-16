@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Пассажир — Бронирование</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Бронирование поездки</h1>
+    <p>Выберите маршрут и место в салоне</p>
+  </header>
+
+  <main class="container">
+    <form id="bookingForm">
+      <input type="text" name="name" placeholder="Имя" required />
+      <input type="tel" name="phone" placeholder="Телефон" required />
+      <input type="text" name="address" placeholder="Адрес посадки" required />
+
+      <select name="route" id="routeSelect" required></select>
+      <input type="date" name="date" required />
+
+      <div id="seatMap"></div>
+
+      <button type="submit">Забронировать</button>
+      <button type="button" id="salonButton">Забронировать весь салон</button>
+    </form>
+
+    <p id="status"></p>
+  </main>
+
+  <footer>
+    <p>&copy; Межгород 2025</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
