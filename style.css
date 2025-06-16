@@ -76,3 +76,31 @@ footer {
   color: #666;
   padding: 1rem;
 }
+.seat-map {
+  margin: 1rem 0;
+}
+
+.seat {
+  padding: 0.5rem;
+  margin: 0.25rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.seat.available {
+  background: #4caf50;
+  color: white;
+}
+
+.seat.booked {
+  background: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.seat-visual {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+}
