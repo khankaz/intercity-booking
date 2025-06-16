@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF‑8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Поездки в город</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <h1 id="pageTitle">Поездки</h1>
+  </header>
+
+  <main class="container">
+    <section class="filters">
+      <input type="date" id="filterDate" />
+      <input type="time" id="filterTime" />
+      <select id="filterCarType">
+        <option value="">Все кузова</option>
+        <option value="sedan">Седан</option>
+        <option value="crossover">Кроссовер</option>
+      </select>
+      <button id="applyFilter">Поиск</button>
+    </section>
+
+    <section id="cards">
+      <!-- Карточки водителей будут вставляться сюда JS -->
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; Межгород 2025</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
