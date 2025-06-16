@@ -1,1 +1,61 @@
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход для водителей</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Вход для водителей</h1>
+    </div>
+  </header>
+  <main class="main">
+    <div class="container">
+      <div class="panel login-panel" id="login-panel">
+        <h2>Авторизация</h2>
+        <input type="text" placeholder="Номер телефона" id="login-phone" class="input-field">
+        <input type="password" placeholder="Пароль" id="login-password" class="input-field">
+        <button id="login-btn" class="btn primary">Войти</button>
+      </div>
+      <div class="panel driver-panel" id="driver-panel" style="display: none;">
+        <h2>Панель водителя</h2>
+        <p><strong>Водитель:</strong> <span id="driver-name"></span></p>
+        <p><strong>Телефон:</strong> <span id="driver-phone"></span></p>
+        <button id="logout-btn" class="btn secondary">Выйти</button>
+        <h3>Подать заявку на направление</h3>
+        <select id="trip-route" class="input-field">
+          <option value="">Выберите маршрут</option>
+          <option value="Караганда – Астана">Караганда – Астана</option>
+          <option value="Караганда – Щучинск">Караганда – Щучинск</option>
+          <option value="Караганда – Бурабай">Караганда – Бурабай</option>
+          <option value="Астана – Караганда">Астана – Караганда</option>
+          <option value="Щучинск – Караганда">Щучинск – Караганда</option>
+          <option value="Бурабай – Караганда">Бурабай – Караганда</option>
+        </select>
+        <input type="date" id="trip-date" class="input-field">
+        <input type="time" id="trip-time" class="input-field">
+        <input type="number" placeholder="Цена (KZT)" id="trip-price" class="input-field">
+        <select id="trip-car" class="input-field">
+          <option value="">Выберите тип авто</option>
+          <option value="sedan">Седан</option>
+          <option value="crossover">Кроссовер</option>
+          <option value="minivan6">Минивэн (6 мест)</option>
+          <option value="minivan7">Минивэн (7 мест)</option>
+        </select>
+        <button id="submit-request-btn" class="btn primary">Подать заявку</button>
+        <h3>История поездок</h3>
+        <div id="trip-history"></div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 Междугородние поездки</p>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
