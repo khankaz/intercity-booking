@@ -66,3 +66,29 @@ document.getElementById("bookingForm").addEventListener("submit", e => {
   renderSeatMap(route);
   document.getElementById("status").textContent = `Место ${+index + 1} успешно забронировано!`;
 });
+const driverRoute = document.getElementById("driverRoute");
+if (driverRoute) {
+  routes.forEach(route => {
+    const opt = document.createElement("option");
+    opt.value = route;
+    opt.textContent = route;
+    driverRoute.appendChild(opt);
+  });
+
+  document.getElementById("driverForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const route = driverRoute.value;
+    const date = document.getElementById("driverDate").value;
+    const seats = +document.getElementById("seats").value;
+    const name = e.target.driverName.value;
+    const phone = e.target.driverPhone.value;
+
+    // Здесь сохраняем данные поездки
+    localStorage.setItem("driverTrip", JSON.stringify({
+      route, date, seats, name, phone
+    }));
+
+    document.getElementById("driverStatus").textContent =
+      `Поездка по маршруту "${route}" на ${date} добавлена с ${seats} местами.`;
+  });
+}}
