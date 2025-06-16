@@ -1,1 +1,72 @@
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель водителя/админа</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Панель водителя/админа</h1>
+    </div>
+  </header>
+  <main class="main">
+    <div class="container">
+      <div class="login-panel" id="login-panel">
+        <h2>Авторизация</h2>
+        <input type="text" placeholder="Номер телефона" id="login-phone" class="login-input">
+        <input type="password" placeholder="Пароль" id="login-password" class="login-input">
+        <button id="login-btn" class="login-btn">Войти</button>
+      </div>
+      <div class="driver-panel" id="driver-panel" style="display: none;">
+        <h2>Личный кабинет водителя</h2>
+        <p><strong>Водитель:</strong> <span id="driver-name"></span></p>
+        <p><strong>Телефон:</strong> <span id="driver-phone"></span></p>
+        <button id="logout-btn" class="logout-btn">Выйти</button>
+        <h3>Добавить поездку</h3>
+        <select id="trip-route" class="form-input">
+          <option value="">Выберите маршрут</option>
+          <option value="Караганда – Астана">Караганда – Астана</option>
+          <option value="Караганда – Щучинск">Караганда – Щучинск</option>
+          <option value="Караганда – Бурабай">Караганда – Бурабай</option>
+          <option value="Астана – Караганда">Астана – Караганда</option>
+          <option value="Щучинск – Караганда">Щучинск – Караганда</option>
+          <option value="Бурабай – Караганда">Бурабай – Караганда</option>
+        </select>
+        <input type="date" id="trip-date" class="form-input">
+        <input type="time" id="trip-time" class="form-input">
+        <input type="number" placeholder="Цена (KZT)" id="trip-price" class="form-input">
+        <select id="trip-car" class="form-input">
+          <option value="">Выберите тип авто</option>
+          <option value="sedan">Седан</option>
+          <option value="crossover">Кроссовер</option>
+          <option value="minivan6">Минивэн (6 мест)</option>
+          <option value="minivan7">Минивэн (7 мест)</option>
+        </select>
+        <button id="add-trip-btn" class="add-trip-btn">Добавить поездку</button>
+        <h3>Мои поездки</h3>
+        <div id="my-trips"></div>
+      </div>
+      <div class="admin-panel" id="admin-panel" style="display: none;">
+        <h2>Панель администратора</h2>
+        <p><strong>Статистика:</strong> <span id="booking-count"></span> бронирований за день</p>
+        <h3>Поездки</h3>
+        <div id="admin-trips"></div>
+        <h3>Регистрация водителей</h3>
+        <input type="text" placeholder="Номер телефона" id="new-driver-phone" class="form-input">
+        <input type="text" placeholder="Имя водителя" id="new-driver-name" class="form-input">
+        <input type="text" placeholder="Пароль" id="new-driver-password" class="form-input">
+        <button id="register-driver-btn" class="register-driver-btn">Зарегистрировать</button>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 Междугородние поездки</p>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
