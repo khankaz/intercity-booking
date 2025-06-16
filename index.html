@@ -10,14 +10,15 @@
   <header class="header">
     <div class="container">
       <h1>Междугородние поездки</h1>
+      <a href="driver-admin.html" class="btn">Вход для водителей/админа</a>
     </div>
   </header>
   <main class="main">
     <div class="container">
       <div class="search-panel">
         <h2>Найти поездку</h2>
-        <input type="text" placeholder="Номер телефона" class="phone-input">
-        <select class="route-select">
+        <input type="text" placeholder="Номер телефона" class="input-field">
+        <select class="input-field">
           <option value="">Выберите маршрут</option>
           <option value="Караганда – Астана">Караганда – Астана</option>
           <option value="Караганда – Щучинск">Караганда – Щучинск</option>
@@ -26,22 +27,22 @@
           <option value="Щучинск – Караганда">Щучинск – Караганда</option>
           <option value="Бурабай – Караганда">Бурабай – Караганда</option>
         </select>
-        <input type="time" placeholder="Время" class="time-filter">
-        <select class="car-select">
+        <input type="time" placeholder="Время" class="input-field">
+        <select class="input-field">
           <option value="">Выберите тип авто</option>
           <option value="sedan">Седан</option>
           <option value="crossover">Кроссовер</option>
           <option value="minivan6">Минивэн (6 мест)</option>
           <option value="minivan7">Минивэн (7 мест)</option>
         </select>
-        <select class="location-select">
+        <select class="input-field">
           <option value="Караганда">Караганда</option>
           <option value="Астана">Астана</option>
           <option value="Щучинск">Щучинск</option>
           <option value="Бурабай">Бурабай</option>
         </select>
       </div>
-      <h2 class="trips-title">Доступные поездки</h2>
+      <h2 class="section-title">Доступные поездки</h2>
       <div class="trips-grid"></div>
     </div>
   </main>
