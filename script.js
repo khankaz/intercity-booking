@@ -76,7 +76,7 @@ function renderDrivers() {
       <p><strong>Статус:</strong> <span class="status ${trip.status}">${trip.status}</span></p>
       <button class="details-btn">Подробнее</button>
     `;
-    driverCard.addEventListener('click', () => openModal(trip));
+    driverCard.querySelector('.details-btn').addEventListener('click', () => openModal(trip));
     driverList.appendChild(driverCard);
   });
 }
@@ -96,26 +96,23 @@ function openModal(trip) {
   renderSeatMap(trip);
   modalPassengerRoutes.innerHTML = trip.passengerRoutes.map(route => `<p>${route}</p>`).join('');
   selectedSeats = [];
+  modalSeatMap.dataset.tripId = trip.id; // Добавляем ID поездки для бронирования
 }
 
 // Рендер карты мест
 function renderSeatMap(trip) {
   modalSeatMap.innerHTML = '';
   const layout = carTypes[trip.car].layout;
-  layout.forEach(row => {
-    row.forEach(seat => {
-      const button = document.createElement('i');
-      button.className = 'fas fa-chair seat';
-      button.dataset.seat = seat;
-      if (seat === 'D') {
-        button.classList.add('occupied');
-      } else if (trip.passengers.some(p => p.seat === seat)) {
-        button.classList.add('occupied');
-      } else {
-        button.addEventListener('click', () => selectSeat(trip.id, seat));
-      }пусть выбранныеМеста = [];
-      modalSeatMap.appendChild(button);
-    });
+  layout.forEach(seat => {
+    const button = document.createElement('i');цена: 5000,
+    button.className = 'fas fa-chair seat';
+    button.dataset.seat = seat;
+    if (seat === 'D' || trip.passengers.some(p => p.seat === seat)) {
+      button.classList.add('occupied');
+    } else {
+      button.addEventListener('click', () => selectSeat(trip.id, seat));
+    }
+    modalSeatMap.appendChild(button);
   });
 }
 
@@ -134,7 +131,8 @@ function selectSeat(tripId, seat) {
 
 // Бронирование
 bookModalBtn.addEventListener('click', () => {
-  const trip = trips.find(t => t.id === parseInt(modalSeatMap.dataset.tripId));
+  const tripId = modalSeatMap.dataset.tripId;
+  const trip = trips.find(t => t.id === parseInt(tripId));
   if (trip && trip.availableSeats >= selectedSeats.length) {
     trip.availableSeats -= selectedSeats.length;
     trip.passengers.push(...selectedSeats.map(seat => ({ phone: '+7700000000', seat, address: 'адрес' }))); // Моковый номер
