@@ -48,11 +48,11 @@ let pickupAddress = '';
 
 // DOM элементы для passenger page
 const tripsGrid = document.querySelector('.trips-grid') || document.createElement('div');
-const phoneInput = document.querySelector('.phone-input');
-const routeSelect = document.querySelector('.route-select');
-const timeFilter = document.querySelector('.time-filter');
-const carSelect = document.querySelector('.car-select');
-const locationSelect = document.querySelector('.location-select');
+const phoneInput = document.querySelector('.input-field:nth-child(2)');
+const routeSelect = document.querySelector('.input-field:nth-child(3)');
+const timeFilter = document.querySelector('.input-field:nth-child(4)');
+const carSelect = document.querySelector('.input-field:nth-child(5)');
+const locationSelect = document.querySelector('.input-field:nth-child(6)');
 
 // DOM элементы для driver-admin page
 const loginPanel = document.getElementById('login-panel');
@@ -117,7 +117,7 @@ function renderPassengerTrips() {
         ${carPhotos[trip.driver.phone] ? `<img src="${carPhotos[trip.driver.phone]}" alt="Car">` : ''}
       </div>
       <h3 class="text-lg font-semibold mt-4">Выбор места</h3>
-      <input type="text" placeholder="Адрес посадки" class="pickup-address" value="${pickupAddress}">
+      <input type="text" placeholder="Адрес посадки" class="input-field pickup-address" value="${pickupAddress}">
       <div class="seat-map">
         <img src="https://via.placeholder.com/300x200?text=Seating+Layout" alt="Seating Layout">
         <div class="seats" data-trip-id="${trip.id}"></div>
@@ -155,14 +155,14 @@ function renderPassengerTrips() {
       if (selectedSeat && selectedSeat.tripId === trip.id) {
         const bookSeatBtn = document.createElement('button');
         bookSeatBtn.textContent = `Забронировать место ${selectedSeat.seat}`;
-        bookSeatBtn.className = 'book-seat';
+        bookSeatBtn.className = 'btn book-seat';
         bookSeatBtn.addEventListener('click', () => bookSeat(trip.id, selectedSeat.seat));
         actionButtons.appendChild(bookSeatBtn);
       }
       if (trip.availableSeats === carTypes[trip.car].seats) {
         const bookSalonBtn = document.createElement('button');
         bookSalonBtn.textContent = 'Салон';
-        bookSalonBtn.className = 'book-salon';
+        bookSalonBtn.className = 'btn book-salon';
         bookSalonBtn.addEventListener('click', () => bookFullSalon(trip.id));
         actionButtons.appendChild(bookSalonBtn);
       }
@@ -180,7 +180,7 @@ function renderPassengerTrips() {
       ${trip.status === 'completed' ? `
         <div class="mt-4">
           <h4 class="text-lg font-semibold">Оставить отзыв</h4>
-          <select class="review-rating">
+          <select class="input-field review-rating">
             <option value="">Выберите рейтинг</option>
             <option value="1">1 ★</option>
             <option value="2">2 ★</option>
@@ -215,11 +215,11 @@ function renderDriverPanel() {
         <div class="seats" data-trip-id="${trip.id}"></div>
       </div>
       ${trip.passengers.map(p => `<p>Место ${p.seat}: ${p.phone}, ${p.address}</p>`).join('')}
-      ${trip.status === 'pending' ? '<button class="start-trip-btn">Старт</button>' : ''}
+      ${trip.status === 'pending' ? '<button class="btn start-trip-btn">Старт</button>' : ''}
       ${trip.status === 'in_progress' ? `
         <div class="action-buttons">
-          <button class="in-progress-btn">В пути</button>
-          <button class="complete-trip-btn">Завершено</button>
+          <button class="btn in-progress-btn">В пути</button>
+          <button class="btn complete-trip-btn">Завершено</button>
         </div>
       ` : ''}
     `;
@@ -253,9 +253,9 @@ function renderAdminPanel() {
     tripCard.innerHTML = `
       <p><strong>Маршрут:</strong> ${trip.route}</p>
       <p><strong>Водитель:</strong> ${trip.driver.name}</p>
-      <input type="number" placeholder="Установить цену (KZT)" class="price-input" value="${trip.price}">
+      <input type="number" placeholder="Установить цену (KZT)" class="input-field price-input" value="${trip.price}">
       <input type="file" accept="image/*" class="photo-upload">
-      <button class="delete-btn">Удалить</button>
+      <button class="btn delete-btn">Удалить</button>
     `;
     adminTrips.appendChild(tripCard);
   });
@@ -410,12 +410,12 @@ loginBtn.addEventListener('click', () => {
       loginPanel.style.display = 'none';
       if (users[phone].role === 'driver') {
         driverPanel.style.display = 'block';
-        setTimeout(() => renderDriverPanel(), 50); // Задержка для анимации
+        setTimeout(() => renderDriverPanel(), 50);
       } else if (users[phone].role === 'admin') {
         adminPanel.style.display = 'block';
-        setTimeout(() => renderAdminPanel(), 50); // Задержка для анимации
+        setTimeout(() => renderAdminPanel(), 50);
       }
-    }, 300); // Задержка совпадает с продолжительностью анимации
+    }, 300);
   } else {
     alert('Неверный номер телефона или пароль.');
   }
@@ -429,7 +429,7 @@ logoutBtn.addEventListener('click', () => {
     adminPanel.style.display = 'none';
     loggedInUser = null;
     loginPanel.style.display = 'block';
-    setTimeout(() => loginPanel.classList.add('active'), 50); // Задержка для анимации
+    setTimeout(() => loginPanel.classList.add('active'), 50);
   }, 300);
 });
 
