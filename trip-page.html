@@ -1,1 +1,76 @@
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поездки</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Междугородние поездки</h1>
+      <a href="driver-login.html" class="btn">Вход для водителей</a>
+      <a href="admin.html" class="link">Админ-панель</a>
+    </div>
+  </header>
+  <main class="main">
+    <div class="container">
+      <div class="filter-panel">
+        <h2 class="section-title">Фильтры</h2>
+        <select class="input-field" id="route-filter">
+          <option value="">Выберите маршрут</option>
+          <option value="Караганда → Астана">Караганда → Астана</option>
+          <option value="Караганда → Щучинск">Караганда → Щучинск</option>
+          <option value="Караганда → Бурабай">Караганда → Бурабай</option>
+          <option value="Астана → Караганда">Астана → Караганда</option>
+          <option value="Щучинск → Караганда">Щучинск → Караганда</option>
+          <option value="Бурабай → Караганда">Бурабай → Караганда</option>
+        </select>
+        <input type="date" class="input-field" id="date-filter" min="2025-06-16">
+        <input type="time" class="input-field" id="time-filter">
+        <select class="input-field" id="car-type-filter">
+          <option value="">Выберите кузов</option>
+          <option value="sedan">Седан</option>
+          <option value="crossover">Кроссовер</option>
+          <option value="minivan6">Минивэн (6 мест)</option>
+          <option value="minivan7">Минивэн (7 мест)</option>
+        </select>
+      </div>
+      <div class="trips-grid" id="trips-grid">
+        <!-- Данные заполняются динамически -->
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 Междугородние поездки</p>
+    </div>
+  </footer>
+  <div class="modal" id="trip-modal">
+    <div class="modal-content">
+      <span class="close-btn">×</span>
+      <h2 id="modal-title"></h2>
+      <img id="modal-car-photo" src="" alt="Фото авто">
+      <p><strong>Водитель:</strong> <span id="modal-driver-name"></span></p>
+      <p><strong>Дата отправки:</strong> <span id="modal-trip-date"></span></p>
+      <p><strong>Марка и кузов:</strong> <span id="modal-car-model"></span></p>
+      <p><strong>Рейтинг:</strong> <span id="modal-rating"></span> ★</p>
+      <h3>Отзывы</h3>
+      <div id="modal-reviews"></div>
+      <h3>Схема салона</h3>
+      <div class="seat-map" id="modal-seat-map"></div>
+      <div class="legend">
+        <span><i class="fas fa-chair" style="color: #28a745;"></i> Свободно</span>
+        <span><i class="fas fa-chair" style="color: #dc3545;"></i> Занято</span>
+        <span><i class="fas fa-chair" style="color: #007bff;"></i> Выбрано</span>
+      </div>
+      <h3>Маршруты других пассажиров</h3>
+      <div id="modal-passenger-routes"></div>
+      <button class="btn primary" id="book-modal-btn">Забронировать</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
