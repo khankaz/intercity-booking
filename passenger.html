@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Пассажир — Ехала</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header"><h1>Пассажир</h1></header>
+  <main class="container">
+    <div class="filter-section">
+      <label>Откуда: <input id="from" required></label>
+      <label>Куда: <input id="to" required></label>
+      <label>Дата: <input type="date" id="date" required></label>
+      <label>Кузов:
+        <select id="carType">
+          <option value="sedan">Седан (4 пасс.)</option>
+          <option value="crossover">Кроссовер (4 пасс.)</option>
+          <option value="minivan6">Минивэн (6 пасс.)</option>
+          <option value="minivan7">Минивэн (7 пасс.)</option>
+        </select>
+      </label>
+      <button id="searchBtn">Искать поездки</button>
+    </div>
+    <div id="tripsList" class="cards"></div>
+  </main>
+</body>
+<script src="script.js"></script>
+</html>
