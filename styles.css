@@ -27,7 +27,8 @@ body {
 
 .header .container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header h1 {
@@ -36,37 +37,79 @@ body {
   font-weight: 600;
 }
 
+.btn, .link {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn {
+  background-color: #4a90e2;
+  color: white;
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.link {
+  color: white;
+  background: none;
+}
+
+.link:hover {
+  color: #e0e6ed;
+}
+
 /* Main */
 .main {
   padding: 1.5rem 0;
   min-height: calc(100vh - 150px);
 }
 
-.drivers-list {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #2c3e50;
 }
 
-.driver-card {
+.city-grid, .trips-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.city-card, .trip-card {
   background: white;
   padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  text-align: center;
   cursor: pointer;
   transition: transform 0.2s;
 }
 
-.driver-card:hover {
+.city-card:hover, .trip-card:hover {
   transform: translateY(-5px);
 }
 
-.driver-card p {
+.city-card {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.trip-card p {
   margin: 0.5rem 0;
   color: #666;
 }
 
-.driver-card .status {
+.trip-card .status {
   font-size: 0.875rem;
   padding: 0.25rem 0.5rem;
   border-radius: 10px;
@@ -78,7 +121,7 @@ body {
 .status.in_progress { background: #17a2b8; }
 .status.completed { background: #28a745; }
 
-.driver-card .details-btn {
+.trip-card .details-btn {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
   border: none;
@@ -89,8 +132,32 @@ body {
   transition: background-color 0.2s;
 }
 
-.driver-card .details-btn:hover {
+.trip-card .details-btn:hover {
   background-color: #357abd;
+}
+
+.filter-panel {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.input-field {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-color: #4a90e2;
+  outline: none;
 }
 
 /* Modal */
@@ -190,7 +257,7 @@ body {
   color: white;
   cursor: pointer;
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 1rem;тело {
   transition: transform 0.2s;
 }
 
@@ -204,15 +271,16 @@ body {
   .header h1 {
     font-size: 1.2rem;
   }
-  .driver-card {
-    padding: 1rem;
-  }
-  .driver-card p {
+  .btn, .link {
+    padding: 0.5rem 1rem;
     font-size: 0.9rem;
+  }
+  .city-card, .trip-card {
+    padding: 1rem;
   }
   .modal-content {
     padding: 1.5rem;
-  }
+  }}
   .seat-map .seat {
     width: 30px;ширина: 30px;
     height: 30px;
@@ -223,8 +291,8 @@ body {
   .container {
     padding: 0 10px;
   }
-  .driver-card p {
-    font-size: 0.85rem;
+  .city-card, .trip-card {
+    font-size: 1rem;
   }
   .modal-content {
     width: 95%;
