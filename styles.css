@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1200px;максимальная ширина: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -27,12 +27,20 @@ body {
   flex-grow: 1;
 }
 
-.login-panel, .driver-panel, .admin-panel {
+.panel {
   background-color: white;
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.panel.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .login-input, .form-input {
