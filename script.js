@@ -39,7 +39,6 @@ let carPhotos = {
 };
 
 let bookings = [];
-let userLocation = 'Караганда';
 let phone = '';
 let selectedRoute = '';
 let filterTime = '';
@@ -52,12 +51,10 @@ const phoneInput = document.querySelector('.input-field:nth-child(2)');
 const routeSelect = document.querySelector('.input-field:nth-child(3)');
 const timeFilter = document.querySelector('.input-field:nth-child(4)');
 const carSelect = document.querySelector('.input-field:nth-child(5)');
-const locationSelect = document.querySelector('.input-field:nth-child(6)');
 
-// DOM элементы для driver-admin page
+// DOM элементы для driver-login page
 const loginPanel = document.getElementById('login-panel');
 const driverPanel = document.getElementById('driver-panel');
-const adminPanel = document.getElementById('admin-panel');
 const loginPhone = document.getElementById('login-phone');
 const loginPassword = document.getElementById('login-password');
 const loginBtn = document.getElementById('login-btn');
@@ -69,14 +66,15 @@ const tripDate = document.getElementById('trip-date');
 const tripTime = document.getElementById('trip-time');
 const tripPrice = document.getElementById('trip-price');
 const tripCar = document.getElementById('trip-car');
-const addTripBtn = document.getElementById('add-trip-btn');
-const myTrips = document.getElementById('my-trips');
-const adminTrips = document.getElementById('admin-trips');
+const submitRequestBtn = document.getElementById('submit-request-btn');
+const tripHistory = document.getElementById('trip-history');
+
+// DOM элементы для admin-dashboard page
+const adminPanel = document.getElementById('admin-panel');
 const bookingCount = document.getElementById('booking-count');
-const newDriverPhone = document.getElementById('new-driver-phone');
-const newDriverName = document.getElementById('new-driver-name');
-const newDriverPassword = document.getElementById('new-driver-password');
-const registerDriverBtn = document.getElementById('register-driver-btn');
+const passengerBase = document.getElementById('passenger-base');
+const driverBase = document.getElementById('driver-base');
+const tripStatus = document.getElementById('trip-status');
 
 let loggedInUser = null;
 const users = {
@@ -85,18 +83,12 @@ const users = {
   'admin': { name: 'Админ', password: 'admin123', role: 'admin' }
 };
 
-// Функция рендера поездок для пассажиров
+// Функция рендера поездок для пассажиров (все доступные)
 function renderPassengerTrips() {
   tripsGrid.innerHTML = '';
   const filteredTrips = trips.filter(trip => {
-    const [start, end] = trip.route.split(' – ');
-    const isInProgress = trip.status === 'in_progress';
-    const userAtDestination = userLocation === end;
-    return (
-      (!selectedRoute || trip.route === selectedRoute) &&
-      (!filterTime || trip.time.includes(filterTime)) &&
-      (!isInProgress || (isInProgress && userAtDestination))
-    );
+    return (!selectedRoute || trip.route === selectedRoute) &&
+           (!filterTime || trip.time.includes(filterTime));
   });
 
   filteredTrips.forEach(trip => {
@@ -112,7 +104,7 @@ function renderPassengerTrips() {
       <p><strong>Водитель:</strong> ${trip.driver.name}</p>
       <p><strong>Расстояние:</strong> ${trip.distance}</p>
       <p><strong>Время в пути:</strong> ${trip.duration}</p>
-      <p><strong>Статус:</strong> ${trip.status === 'pending' ? 'Ожидает' : trip.status === 'in_progress' ? 'В пути' : 'Завершено'}</p>
+      <p><strong>Статус:</strong> ${trip.status}</p>
       <div class="driver-profile">
         ${carPhotos[trip.driver.phone] ? `<img src="${carPhotos[trip.driver.phone]}" alt="Car">` : ''}
       </div>
@@ -197,67 +189,72 @@ function renderPassengerTrips() {
   });
 }
 
-// Функция рендера панели водителя
+// Функция рендера панели водителя с заявками и историей
 function renderDriverPanel() {
   driverName.textContent = users[loggedInUser].name;
   driverPhone.textContent = loggedInUser;
-  myTrips.innerHTML = '';
+  tripHistory.innerHTML = '';
   const driverTrips = trips.filter(t => t.driver.phone === loggedInUser);
   driverTrips.forEach(trip => {
     const tripCard = document.createElement('div');
     tripCard.className = 'trip-card';
     tripCard.innerHTML = `
       <p><strong>Маршрут:</strong> ${trip.route}</p>
-      <p><strong>Статус:</strong> ${trip.status === 'pending' ? 'Ожидает' : trip.status === 'in_progress' ? 'В пути' : 'Завершено'}</p>
+      <p><strong>Дата:</strong> ${trip.date}</p>
+      <p><strong>Статус:</strong> ${trip.status}</p>
       <p><strong>Пассажиры:</strong> ${trip.passengers.length} / ${trip.seats}</p>
-      <div class="seat-map">
-        <img src="https://via.placeholder.com/300x200?text=Seating+Layout" alt="Seating Layout">
-        <div class="seats" data-trip-id="${trip.id}"></div>
-      </div>
-      ${trip.passengers.map(p => `<p>Место ${p.seat}: ${p.phone}, ${p.address}</p>`).join('')}
-      ${trip.status === 'pending' ? '<button class="btn start-trip-btn">Старт</button>' : ''}
-      ${trip.status === 'in_progress' ? `
-        <div class="action-buttons">
-          <button class="btn in-progress-btn">В пути</button>
-          <button class="btn complete-trip-btn">Завершено</button>
-        </div>
-      ` : ''}
     `;
-    const seatsContainer = tripCard.querySelector('.seats');
-    const layout = carTypes[trip.car].layout;
-    layout.forEach(row => {
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'row';
-      row.forEach(seat => {
-        const isDriver = seat === 'D';
-        const isTaken = trip.passengers.some(p => p.seat === seat);
-        const button = document.createElement('button');
-        button.textContent = seat === 'D' ? 'D' : seat;
-        button.className = `seat ${isDriver ? 'bg-gray-500' : isTaken ? 'bg-red-500' : 'bg-green-500'}`;
-        rowDiv.appendChild(button);
-      });
-      seatsContainer.appendChild(rowDiv);
-    });
-    myTrips.appendChild(tripCard);
+    tripHistory.appendChild(tripCard);
   });
   driverPanel.classList.add('active');
 }
 
-// Функция рендера панели админа
+// Функция рендера дашборда админа
 function renderAdminPanel() {
   bookingCount.textContent = bookings.length;
-  adminTrips.innerHTML = '';
-  trips.forEach(trip => {
-    const tripCard = document.createElement('div');
-    tripCard.className = 'trip-card';
-    tripCard.innerHTML = `
-      <p><strong>Маршрут:</strong> ${trip.route}</p>
-      <p><strong>Водитель:</strong> ${trip.driver.name}</p>
-      <input type="number" placeholder="Установить цену (KZT)" class="input-field price-input" value="${trip.price}">
-      <input type="file" accept="image/*" class="photo-upload">
-      <button class="btn delete-btn">Удалить</button>
-    `;
-    adminTrips.appendChild(tripCard);
+  passengerBase.innerHTML = '';
+  driverBase.innerHTML = '';
+  tripStatus.innerHTML = '';
+
+  // База пассажиров
+  const uniquePassengers = [...new Set(bookings.map(b => b.phone))];
+  uniquePassengers.forEach(passenger => {
+    const passengerCard = document.createElement('div');
+    passengerCard.className = 'trip-card';
+    passengerCard.innerHTML = `<p><strong>Телефон:</strong> ${passenger}</p>`;
+    passengerBase.appendChild(passengerCard);
+  });
+
+  // База водителей
+  Object.keys(users).filter(phone => users[phone].role === 'driver').forEach(phone => {
+    const driverCard = document.createElement('div');
+    driverCard.className = 'trip-card';
+    driverCard.innerHTML = `<p><strong>Имя:</strong> ${users[phone].name}, <strong>Телефон:</strong> ${phone}</p>`;
+    driverBase.appendChild(driverCard);
+  });
+
+  // Статус поездок
+  const tripStatuses = {
+    pending: trips.filter(t => t.status === 'pending'),
+    in_progress: trips.filter(t => t.status === 'in_progress'),
+    completed: trips.filter(t => t.status === 'completed')
+  };
+  ['pending', 'in_progress', 'completed'].forEach(status => {
+    if (tripStatuses[status].length > 0) {
+      const statusSection = document.createElement('div');
+      statusSection.innerHTML = `<h4>${status === 'pending' ? 'Заявки' : status === 'in_progress' ? 'В пути' : 'Завершено'}</h4>`;
+      tripStatuses[status].forEach(trip => {
+        const tripCard = document.createElement('div');
+        tripCard.className = 'trip-card';
+        tripCard.innerHTML = `
+          <p><strong>Маршрут:</strong> ${trip.route}</p>
+          <p><strong>Водитель:</strong> ${trip.driver.name}</p>
+          <button class="btn delete-btn">Удалить</button>
+        `;
+        statusSection.appendChild(tripCard);
+      });
+      tripStatus.appendChild(statusSection);
+    }
   });
   adminPanel.classList.add('active');
 }
@@ -280,7 +277,7 @@ async function bookSeat(tripId, seat) {
     trip.availableSeats--;
     trip.passengers.push({ phone, seat, address: pickupAddress });
     bookings.push({ tripId, phone, seat, address: pickupAddress, status: 'confirmed' });
-    alert(`Бронь на место ${seat} подтверждена! Уведомление отправлено через WhatsApp/Telegram.`);
+    alert(`Бронь на место ${seat} подтверждена!`);
     selectedSeat = null;
     renderPassengerTrips();
   }
@@ -297,15 +294,15 @@ async function bookFullSalon(tripId) {
     trip.availableSeats = 0;
     trip.passengers = Array.from({ length: trip.seats - 1 }, (_, i) => ({ phone, seat: i + 1, address: pickupAddress }));
     bookings.push({ tripId, phone, address: pickupAddress, status: 'confirmed', fullSalon: true });
-    alert('Весь салон забронирован! Уведомление отправлено через WhatsApp/Telegram.');
+    alert('Весь салон забронирован!');
     renderPassengerTrips();
   } else {
     alert('Бронирование салона возможно только если все места свободны.');
   }
 }
 
-// Добавление поездки
-async function addTrip() {
+// Подать заявку на направление
+async function submitRequest() {
   if (!await verifyPhone(loggedInUser)) {
     alert('Ошибка проверки номера телефона');
     return;
@@ -326,37 +323,8 @@ async function addTrip() {
     duration: tripRoute.value.includes('Астана') ? '3 ч' : '3.5 ч'
   };
   trips.push(newTrip);
-  alert('Поездка добавлена!');
+  alert('Заявка подана!');
   renderDriverPanel();
-}
-
-// Регистрация водителя
-function registerDriver() {
-  const phone = newDriverPhone.value;
-  const name = newDriverName.value;
-  const password = newDriverPassword.value;
-  if (phone && name && password) {
-    users[phone] = { name, password, role: 'driver' };
-    alert('Водитель зарегистрирован!');
-    newDriverPhone.value = '';
-    newDriverName.value = '';
-    newDriverPassword.value = '';
-  }
-}
-
-// Обработка загрузки фото
-function handlePhotoUpload(event, driverPhone) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      carPhotos[driverPhone] = reader.result;
-      renderPassengerTrips();
-      renderDriverPanel();
-      renderAdminPanel();
-    };
-    reader.readAsDataURL(file);
-  }
 }
 
 // Проверка номера телефона (заглушка)
@@ -370,7 +338,6 @@ phoneInput.addEventListener('input', (e) => { phone = e.target.value; });
 routeSelect.addEventListener('change', (e) => { selectedRoute = e.target.value; renderPassengerTrips(); });
 timeFilter.addEventListener('input', (e) => { filterTime = e.target.value; renderPassengerTrips(); });
 carSelect.addEventListener('change', (e) => { selectedCar = e.target.value; renderPassengerTrips(); });
-locationSelect.addEventListener('change', (e) => { userLocation = e.target.value; renderPassengerTrips(); });
 
 document.addEventListener('click', (e) => {
   if (e.target.classList.contains('review-rating')) {
@@ -399,22 +366,17 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Обработчики событий для driver-admin page
+// Обработчики событий для driver-login page
 loginBtn.addEventListener('click', () => {
   const phone = loginPhone.value;
   const password = loginPassword.value;
-  if (users[phone] && users[phone].password === password) {
+  if (users[phone] && users[phone].password === password && users[phone].role === 'driver') {
     loggedInUser = phone;
     loginPanel.classList.remove('active');
     setTimeout(() => {
       loginPanel.style.display = 'none';
-      if (users[phone].role === 'driver') {
-        driverPanel.style.display = 'block';
-        setTimeout(() => renderDriverPanel(), 50);
-      } else if (users[phone].role === 'admin') {
-        adminPanel.style.display = 'block';
-        setTimeout(() => renderAdminPanel(), 50);
-      }
+      driverPanel.style.display = 'block';
+      setTimeout(() => renderDriverPanel(), 50);
     }, 300);
   } else {
     alert('Неверный номер телефона или пароль.');
@@ -423,71 +385,44 @@ loginBtn.addEventListener('click', () => {
 
 logoutBtn.addEventListener('click', () => {
   driverPanel.classList.remove('active');
-  adminPanel.classList.remove('active');
   setTimeout(() => {
     driverPanel.style.display = 'none';
-    adminPanel.style.display = 'none';
     loggedInUser = null;
     loginPanel.style.display = 'block';
     setTimeout(() => loginPanel.classList.add('active'), 50);
   }, 300);
 });
 
-addTripBtn.addEventListener('click', addTrip);
+submitRequestBtn.addEventListener('click', submitRequest);
 
-registerDriverBtn.addEventListener('click', registerDriver);
-
-document.addEventListener('change', (e) => {
-  if (e.target.classList.contains('photo-upload')) {
-    const tripCard = e.target.closest('.trip-card');
-    const driverPhone = tripCard.querySelector('p').textContent.split(': ')[1];
-    handlePhotoUpload(e, driverPhone);
-  }
-  if (e.target.classList.contains('price-input')) {
-    const tripCard = e.target.closest('.trip-card');
-    const tripId = trips.findIndex(t => t.driver.name === tripCard.querySelector('p').textContent.split(': ')[1]);
-    trips[tripId].price = parseInt(e.target.value) || trips[tripId].price;
+// Обработчики событий для admin-dashboard page
+if (window.location.pathname.includes('admin-dashboard.html')) {
+  if (!loggedInUser || users[loggedInUser].role !== 'admin') {
+    window.location.href = 'index.html';
+  } else {
     renderAdminPanel();
   }
-});
+}
 
 document.addEventListener('click', (e) => {
-  if (e.target.classList.contains('start-trip-btn')) {
-    const tripId = e.target.closest('.trip-card').querySelector('.seats').dataset.tripId;
-    trips.find(t => t.id === parseInt(tripId)).status = 'in_progress';
-    renderDriverPanel();
-  }
-  if (e.target.classList.contains('in-progress-btn')) {
-    const tripId = e.target.closest('.trip-card').querySelector('.seats').dataset.tripId;
-    trips.find(t => t.id === parseInt(tripId)).status = 'in_progress';
-    renderDriverPanel();
-  }
-  if (e.target.classList.contains('complete-trip-btn')) {
-    const tripId = e.target.closest('.trip-card').querySelector('.seats').dataset.tripId;
-    trips.find(t => t.id === parseInt(tripId)).status = 'completed';
-    renderDriverPanel();
-  }
   if (e.target.classList.contains('delete-btn')) {
     const tripCard = e.target.closest('.trip-card');
-    const driverName = tripCard.querySelector('p').textContent.split(': ')[1];
-    const tripId = trips.findIndex(t => t.driver.name === driverName);
+    const route = tripCard.querySelector('p:nth-child(1)').textContent.split(': ')[1];
+    const tripId = trips.findIndex(t => t.route === route);
     trips.splice(tripId, 1);
     renderAdminPanel();
   }
 });
 
 // Инициализация
-if (window.location.pathname.includes('driver-admin.html')) {
+if (window.location.pathname.includes('index.html')) {
+  renderPassengerTrips();
+} else if (window.location.pathname.includes('driver-login.html')) {
   if (!loggedInUser) {
     loginPanel.style.display = 'block';
     loginPanel.classList.add('active');
-  } else if (users[loggedInUser].role === 'driver') {
+  } else {
     driverPanel.style.display = 'block';
     renderDriverPanel();
-  } else if (users[loggedInUser].role === 'admin') {
-    adminPanel.style.display = 'block';
-    renderAdminPanel();
   }
-} else {
-  renderPassengerTrips();
 }
