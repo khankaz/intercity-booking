@@ -199,7 +199,7 @@ body {
   margin-top: 0.5rem;
   font-size: 0.875rem;
   color: #666;
-}
+}отступ: 0;
 
 .seat-map .legend span {
   display: inline-block;
@@ -233,11 +233,11 @@ body {
 }
 
 /* Driver/Admin Panels */
-#my-trips .trip-card, #admin-trips .trip-card {
+#my-trips .trip-card, #admin-trips .trip-card, #trip-history .trip-card, #passenger-base .trip-card, #driver-base .trip-card, #trip-status .trip-card {
   margin-bottom: 1rem;
 }
 
-#admin-trips .delete-btn {
+#admin-trips .delete-btn, #trip-status .delete-btn {
   background-color: #ef4444;
   color: white;
   padding: 0.25rem 0.5rem;
@@ -246,7 +246,7 @@ body {
   cursor: pointer;
 }
 
-#admin-trips .delete-btn:hover {
+#admin-trips .delete-btn:hover, #trip-status .delete-btn:hover {
   background-color: #dc2626;
 }
 
