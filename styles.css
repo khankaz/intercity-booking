@@ -42,52 +42,110 @@ body {
   min-height: calc(100vh - 150px);
 }
 
-.booking-form, .drivers-list {
+.drivers-list {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.driver-card {
   background: white;
   padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
-.booking-form h2, .drivers-list h2 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #2c3e50;
+.driver-card:hover {
+  transform: translateY(-5px);
 }
 
-.input-field {
-  display: block;
+.driver-card p {
+  margin: 0.5rem 0;
+  color: #666;
+}
+
+.driver-card .status {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 10px;
+  color: white;
+  display: inline-block;
+}
+
+.status.pending { background: #ffc107; }
+.status.in_progress { background: #17a2b8; }
+.status.completed { background: #28a745; }
+
+.driver-card .details-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 25px;
+  background: #4a90e2;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.driver-card .details-btn:hover {
+  background-color: #357abd;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #e0e6ed;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
 }
 
-.input-field:focus {
-  border-color: #4a90e2;
-  outline: none;
-}
-
-.seat-selection {
-  margin-bottom: 1rem;
-}
-
-.seat-map {
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
   position: relative;
-  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.modal-content img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
   margin: 1rem 0;
 }
 
-.seat-map .row {
-  display: flex;
-  justify-content: center;
+.modal-content h3 {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  color: #2c3e50;
+}
+
+.seat-map {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
 }
 
 .seat-map .seat {
@@ -111,12 +169,6 @@ body {
   cursor: not-allowed;
 }
 
-.seat-map .car-icon {
-  margin-top: 0.5rem;
-  font-size: 2rem;
-  color: #333;
-}
-
 .legend {
   display: flex;
   gap: 1rem;
@@ -130,19 +182,16 @@ body {
   align-items: center;
 }
 
-.btn {
+.btn.primary {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 25px;
-  cursor: pointer;
-  font-weight: 500;
-  width: 100%;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn.primary {
   background-color: #4a90e2;
   color: white;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 1rem;
+  transition: transform 0.2s;
 }
 
 .btn.primary:hover {
@@ -150,52 +199,23 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.drivers-list .driver-card {
-  background: white;
-  padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1rem;
-  transition: transform 0.2s;
-}
-
-.drivers-list .driver-card:hover {
-  transform: translateY(-5px);
-}
-
-.driver-card p {
-  margin: 0.5rem 0;
-  color: #666;
-}
-
-.driver-card .status {
-  font-size: 0.875rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 10px;
-  color: white;
-}
-
-.status.pending { background: #ffc107; }
-.status.in_progress { background: #17a2b8; }
-.status.completed { background: #28a745; }
-
 /* Адаптивность */
 @media (max-width: 768px) {
   .header h1 {
     font-size: 1.2rem;
   }
-  .booking-form, .drivers-list {
+  .driver-card {
     padding: 1rem;
   }
-  .booking-form h2, .drivers-list h2 {
-    font-size: 1.1rem;
+  .driver-card p {
+    font-size: 0.9rem;
+  }
+  .modal-content {
+    padding: 1.5rem;
   }
   .seat-map .seat {
     width: 30px;
     height: 30px;
-  }
-  .btn {
-    padding: 0.5rem 1rem;
   }
 }
 
@@ -203,23 +223,16 @@ body {
   .container {
     padding: 0 10px;
   }
-  .booking-form h2, .drivers-list h2 {
-    font-size: 1rem;
+  .driver-card p {
+    font-size: 0.85rem;
   }
-  .input-field {
-    padding: 0.5rem;
-    font-size: 0.9rem;
-  }
-  .seat-map .row {
-    gap: 0.3rem;
+  .modal-content {
+    width: 95%;
   }
   .seat-map .seat {
     width: 25px;
     height: 25px;
     font-size: 0.75rem;
-  }
-  .driver-card p {
-    font-size: 0.9rem;
   }
 }
 
