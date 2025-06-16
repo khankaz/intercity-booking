@@ -92,3 +92,52 @@ if (driverRoute) {
       `Поездка по маршруту "${route}" на ${date} добавлена с ${seats} местами.`;
   });
 }}
+// Карта мест в салоне (седан 5 мест)
+const seatMapContainer = document.getElementById("seatMap");
+const seatCount = 5; // 1 водитель + 4 пассажира (место водителя не отображаем)
+
+function renderSeatMap(bookedSeats = []) {
+  seatMapContainer.innerHTML = "<strong>Выберите место:</strong><br>";
+  for (let i = 1; i <= 4; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = `Место ${i}`;
+    btn.className = bookedSeats.includes(i) ? "seat booked" : "seat available";
+    btn.disabled = bookedSeats.includes(i);
+    btn.onclick = () => {
+      document.getElementById("selectedSeat")?.remove();
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "seat";
+      input.value = i;
+      input.id = "selectedSeat";
+      seatMapContainer.appendChild(input);
+    };
+    seatMapContainer.appendChild(btn);
+  }
+}
+
+// Показываем активные поездки от водителей
+function renderActiveTrips() {
+  const tripData = localStorage.getItem("driverTrip");
+  const container = document.getElementById("activeTrips");
+  if (!tripData || !container) return;
+
+  const trip = JSON.parse(tripData);
+  const div = document.createElement("div");
+  div.className = "route-card";
+  div.innerHTML = `
+    <strong>Маршрут:</strong> ${trip.route}<br>
+    <strong>Дата:</strong> ${trip.date}<br>
+    <strong>Свободных мест:</strong> ${trip.seats}<br>
+    <strong>Водитель:</strong> ${trip.name}<br>
+    <strong>Телефон:</strong> ${trip.phone}<br>
+    <div class="seat-visual">
+      <span>Места:</span> ${"🪑".repeat(trip.seats)} ${"❌".repeat(6 - trip.seats)}
+    </div>
+  `;
+  container.appendChild(div);
+
+  renderSeatMap([]); // пока без брони
+}}
+
+renderActiveTrips();
