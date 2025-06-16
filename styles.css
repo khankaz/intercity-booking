@@ -214,7 +214,7 @@ body {
     padding: 1.5rem;
   }
   .seat-map .seat {
-    width: 30px;
+    width: 30px;ширина: 30px;
     height: 30px;
   }
 }
