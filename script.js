@@ -64,7 +64,7 @@ function renderCities() {
   cityGrid.addEventListener('click', (e) => {
     if (e.target.classList.contains('city-card')) {
       const city = e.target.dataset.city;
-      window.location.href = `trip-page.html?city=${city}`;
+      window.location.href = `trip-page.html?destination=${city}`;
     }
   });
 }
@@ -73,14 +73,22 @@ function renderCities() {
 function renderTrips() {
   tripsGrid.innerHTML = '';
   const urlParams = new URLSearchParams(window.location.search);
-  const city = urlParams.get('city');
+  const destination = urlParams.get('destination');
+
+  // Установка выбранного города в фильтр маршрута
+  if (destination) {
+    const possibleRoutes = trips.map(trip => trip.route).filter(route => route.includes(destination));
+    if (possibleRoutes.length > 0) {
+      routeFilter.value = possibleRoutes[0]; // Устанавливаем первый подходящий маршрут
+    }
+  }
+
   const filteredTrips = trips.filter(trip => {
-    const routeMatch = !routeFilter.value || trip.route.includes(routeFilter.value);
+    const routeMatch = !routeFilter.value || trip.route === routeFilter.value;
     const dateMatch = !dateFilter.value || trip.date === dateFilter.value;
     const timeMatch = !timeFilter.value || trip.time.includes(timeFilter.value);
     const carMatch = !carTypeFilter.value || trip.car === carTypeFilter.value;
-    const cityMatch = !city || trip.route.includes(city);
-    return routeMatch && dateMatch && timeMatch && carMatch && cityMatch;
+    return routeMatch && dateMatch && timeMatch && carMatch;
   });
 
   filteredTrips.forEach(trip => {
@@ -147,7 +155,7 @@ function selectSeat(tripId, seat) {
     seatElement.classList.toggle('selected');
     if (seatElement.classList.contains('selected')) {
       selectedSeats.push(seat);
-    } else {
+    } else {пассажиры: [{ телефон: '+77098765432', место: 1, адрес: 'ул. Ленина, 10' }]
       selectedSeats = selectedSeats.filter(s => s !== seat);
     }
   }
