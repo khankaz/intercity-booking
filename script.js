@@ -46,20 +46,47 @@ let filterTime = '';
 let selectedCar = '';
 let pickupAddress = '';
 
-// DOM элементы
-const tripsGrid = document.querySelector('.trips-grid');
+// DOM элементы для passenger page
+const tripsGrid = document.querySelector('.trips-grid') || document.createElement('div');
 const phoneInput = document.querySelector('.phone-input');
 const routeSelect = document.querySelector('.route-select');
 const timeFilter = document.querySelector('.time-filter');
 const carSelect = document.querySelector('.car-select');
 const locationSelect = document.querySelector('.location-select');
-const toggleMode = document.querySelector('.toggle-mode');
-const toggleAdmin = document.querySelector('.toggle-admin');
-let mode = 'passenger';
-let adminView = false;
 
-// Функция рендера поездок
-function renderTrips() {
+// DOM элементы для driver-admin page
+const loginPanel = document.getElementById('login-panel');
+const driverPanel = document.getElementById('driver-panel');
+const adminPanel = document.getElementById('admin-panel');
+const loginPhone = document.getElementById('login-phone');
+const loginPassword = document.getElementById('login-password');
+const loginBtn = document.getElementById('login-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const driverName = document.getElementById('driver-name');
+const driverPhone = document.getElementById('driver-phone');
+const tripRoute = document.getElementById('trip-route');
+const tripDate = document.getElementById('trip-date');
+const tripTime = document.getElementById('trip-time');
+const tripPrice = document.getElementById('trip-price');
+const tripCar = document.getElementById('trip-car');
+const addTripBtn = document.getElementById('add-trip-btn');
+const myTrips = document.getElementById('my-trips');
+const adminTrips = document.getElementById('admin-trips');
+const bookingCount = document.getElementById('booking-count');
+const newDriverPhone = document.getElementById('new-driver-phone');
+const newDriverName = document.getElementById('new-driver-name');
+const newDriverPassword = document.getElementById('new-driver-password');
+const registerDriverBtn = document.getElementById('register-driver-btn');
+
+let loggedInUser = null;
+const users = {
+  '+77012345678': { name: 'Айдос', password: '1234', role: 'driver' },
+  '+77087654321': { name: 'Нурлан', password: '5678', role: 'driver' },
+  'admin': { name: 'Админ', password: 'admin123', role: 'admin' }
+};
+
+// Функция рендера поездок для пассажиров
+function renderPassengerTrips() {
   tripsGrid.innerHTML = '';
   const filteredTrips = trips.filter(trip => {
     const [start, end] = trip.route.split(' – ');
@@ -170,11 +197,74 @@ function renderTrips() {
   });
 }
 
+// Функция рендера панели водителя
+function renderDriverPanel() {
+  driverName.textContent = users[loggedInUser].name;
+  driverPhone.textContent = loggedInUser;
+  myTrips.innerHTML = '';
+  const driverTrips = trips.filter(t => t.driver.phone === loggedInUser);
+  driverTrips.forEach(trip => {
+    const tripCard = document.createElement('div');
+    tripCard.className = 'trip-card';
+    tripCard.innerHTML = `
+      <p><strong>Маршрут:</strong> ${trip.route}</p>
+      <p><strong>Статус:</strong> ${trip.status === 'pending' ? 'Ожидает' : trip.status === 'in_progress' ? 'В пути' : 'Завершено'}</p>
+      <p><strong>Пассажиры:</strong> ${trip.passengers.length} / ${trip.seats}</p>
+      <div class="seat-map">
+        <img src="https://via.placeholder.com/300x200?text=Seating+Layout" alt="Seating Layout">
+        <div class="seats" data-trip-id="${trip.id}"></div>
+      </div>
+      ${trip.passengers.map(p => `<p>Место ${p.seat}: ${p.phone}, ${p.address}</p>`).join('')}
+      ${trip.status === 'pending' ? '<button class="start-trip-btn">Старт</button>' : ''}
+      ${trip.status === 'in_progress' ? `
+        <div class="action-buttons">
+          <button class="in-progress-btn">В пути</button>
+          <button class="complete-trip-btn">Завершено</button>
+        </div>
+      ` : ''}
+    `;
+    const seatsContainer = tripCard.querySelector('.seats');
+    const layout = carTypes[trip.car].layout;
+    layout.forEach(row => {
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'row';
+      row.forEach(seat => {
+        const isDriver = seat === 'D';
+        const isTaken = trip.passengers.some(p => p.seat === seat);
+        const button = document.createElement('button');
+        button.textContent = seat === 'D' ? 'D' : seat;
+        button.className = `seat ${isDriver ? 'bg-gray-500' : isTaken ? 'bg-red-500' : 'bg-green-500'}`;
+        rowDiv.appendChild(button);
+      });
+      seatsContainer.appendChild(rowDiv);
+    });
+    myTrips.appendChild(tripCard);
+  });
+}
+
+// Функция рендера панели админа
+function renderAdminPanel() {
+  bookingCount.textContent = bookings.length;
+  adminTrips.innerHTML = '';
+  trips.forEach(trip => {
+    const tripCard = document.createElement('div');
+    tripCard.className = 'trip-card';
+    tripCard.innerHTML = `
+      <p><strong>Маршрут:</strong> ${trip.route}</p>
+      <p><strong>Водитель:</strong> ${trip.driver.name}</p>
+      <input type="number" placeholder="Установить цену (KZT)" class="price-input" value="${trip.price}">
+      <input type="file" accept="image/*" class="photo-upload">
+      <button class="delete-btn">Удалить</button>
+    `;
+    adminTrips.appendChild(tripCard);
+  });
+}
+
 // Выбор места
 let selectedSeat = null;
 function selectSeat(tripId, seat) {
   selectedSeat = { tripId, seat };
-  renderTrips();
+  renderPassengerTrips();
 }
 
 // Бронирование места
@@ -190,7 +280,7 @@ async function bookSeat(tripId, seat) {
     bookings.push({ tripId, phone, seat, address: pickupAddress, status: 'confirmed' });
     alert(`Бронь на место ${seat} подтверждена! Уведомление отправлено через WhatsApp/Telegram.`);
     selectedSeat = null;
-    renderTrips();
+    renderPassengerTrips();
   }
 }
 
@@ -206,9 +296,64 @@ async function bookFullSalon(tripId) {
     trip.passengers = Array.from({ length: trip.seats - 1 }, (_, i) => ({ phone, seat: i + 1, address: pickupAddress }));
     bookings.push({ tripId, phone, address: pickupAddress, status: 'confirmed', fullSalon: true });
     alert('Весь салон забронирован! Уведомление отправлено через WhatsApp/Telegram.');
-    renderTrips();
+    renderPassengerTrips();
   } else {
     alert('Бронирование салона возможно только если все места свободны.');
+  }
+}
+
+// Добавление поездки
+async function addTrip() {
+  if (!await verifyPhone(loggedInUser)) {
+    alert('Ошибка проверки номера телефона');
+    return;
+  }
+  const newTrip = {
+    id: trips.length + 1,
+    route: tripRoute.value,
+    date: tripDate.value,
+    time: tripTime.value,
+    price: parseInt(tripPrice.value) || 5000,
+    seats: parseInt(carTypes[tripCar.value].seats),
+    availableSeats: parseInt(carTypes[tripCar.value].seats),
+    car: tripCar.value,
+    status: 'pending',
+    driver: { name: users[loggedInUser].name, phone: loggedInUser, experience: 0, trips: 0, rating: 0 },
+    passengers: [],
+    distance: tripRoute.value.includes('Астана') ? '220 км' : '250 км',
+    duration: tripRoute.value.includes('Астана') ? '3 ч' : '3.5 ч'
+  };
+  trips.push(newTrip);
+  alert('Поездка добавлена!');
+  renderDriverPanel();
+}
+
+// Регистрация водителя
+function registerDriver() {
+  const phone = newDriverPhone.value;
+  const name = newDriverName.value;
+  const password = newDriverPassword.value;
+  if (phone && name && password) {
+    users[phone] = { name, password, role: 'driver' };
+    alert('Водитель зарегистрирован!');
+    newDriverPhone.value = '';
+    newDriverName.value = '';
+    newDriverPassword.value = '';
+  }
+}
+
+// Обработка загрузки фото
+function handlePhotoUpload(event, driverPhone) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      carPhotos[driverPhone] = reader.result;
+      renderPassengerTrips();
+      renderDriverPanel();
+      renderAdminPanel();
+    };
+    reader.readAsDataURL(file);
   }
 }
 
@@ -218,22 +363,12 @@ async function verifyPhone(phoneNumber) {
   return true;
 }
 
-// Обработчики событий
+// Обработчики событий для passenger page
 phoneInput.addEventListener('input', (e) => { phone = e.target.value; });
-routeSelect.addEventListener('change', (e) => { selectedRoute = e.target.value; renderTrips(); });
-timeFilter.addEventListener('input', (e) => { filterTime = e.target.value; renderTrips(); });
-carSelect.addEventListener('change', (e) => { selectedCar = e.target.value; renderTrips(); });
-locationSelect.addEventListener('change', (e) => { userLocation = e.target.value; renderTrips(); });
-toggleMode.addEventListener('click', () => {
-  mode = mode === 'passenger' ? 'driver' : 'passenger';
-  toggleMode.textContent = mode === 'passenger' ? 'Режим водителя' : 'Режим пассажира';
-  renderTrips();
-});
-toggleAdmin.addEventListener('click', () => {
-  adminView = !adminView;
-  toggleAdmin.textContent = adminView ? 'Выход из админки' : 'Админ-панель';
-  renderTrips();
-});
+routeSelect.addEventListener('change', (e) => { selectedRoute = e.target.value; renderPassengerTrips(); });
+timeFilter.addEventListener('input', (e) => { filterTime = e.target.value; renderPassengerTrips(); });
+carSelect.addEventListener('change', (e) => { selectedCar = e.target.value; renderPassengerTrips(); });
+locationSelect.addEventListener('change', (e) => { userLocation = e.target.value; renderPassengerTrips(); });
 
 document.addEventListener('click', (e) => {
   if (e.target.classList.contains('review-rating')) {
@@ -245,14 +380,102 @@ document.addEventListener('click', (e) => {
         const tripId = e.target.closest('.trip-card').querySelector('.seats').dataset.tripId;
         reviews.push({ tripId, rating, comment });
         alert('Отзыв добавлен!');
-        renderTrips();
+        renderPassengerTrips();
       }
     }
   }
   if (e.target.classList.contains('pickup-address')) {
     pickupAddress = e.target.value;
   }
+  if (e.target.classList.contains('book-seat')) {
+    const tripId = e.target.closest('.trip-card').querySelector('.seats').dataset.tripId;
+    bookSeat(tripId, selectedSeat.seat);
+  }
+  if (e.target.classList.contains('book-salon')) {
+    const tripId = e.target.closest('.trip-card').querySelector('.seats').dataset.tripId;
+    bookFullSalon(tripId);
+  }
+});
+
+// Обработчики событий для driver-admin page
+loginBtn.addEventListener('click', () => {
+  const phone = loginPhone.value;
+  const password = loginPassword.value;
+  if (users[phone] && users[phone].password === password) {
+    loggedInUser = phone;
+    loginPanel.style.display = 'none';
+    if (users[phone].role === 'driver') {
+      driverPanel.style.display = 'block';
+      renderDriverPanel();
+    } else if (users[phone].role === 'admin') {
+      adminPanel.style.display = 'block';
+      renderAdminPanel();
+    }
+  } else {
+    alert('Неверный номер телефона или пароль.');
+  }
+});
+
+logoutBtn.addEventListener('click', () => {
+  loggedInUser = null;
+  driverPanel.style.display = 'none';
+  loginPanel.style.display = 'block';
+});
+
+addTripBtn.addEventListener('click', addTrip);
+
+registerDriverBtn.addEventListener('click', registerDriver);
+
+document.addEventListener('change', (e) => {
+  if (e.target.classList.contains('photo-upload')) {
+    const tripCard = e.target.closest('.trip-card');
+    const driverPhone = tripCard.querySelector('p').textContent.split(': ')[1];
+    handlePhotoUpload(e, driverPhone);пусть поездки = [
+  }
+  if (e.target.classList.contains('price-input')) {
+    const tripCard = e.target.closest('.trip-card');
+    const tripId = trips.findIndex(t => t.driver.name === tripCard.querySelector('p').textContent.split(': ')[1]);
+    trips[tripId].price = parseInt(e.target.value) || trips[tripId].price;
+    renderAdminPanel();
+  }
+});
+
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('start-trip-btn')) {
+    const tripId = e.target.closest('.trip-card').querySelector('.seats').dataset.tripId;
+    trips.find(t => t.id === parseInt(tripId)).status = 'in_progress';
+    renderDriverPanel();
+  }
+  if (e.target.classList.contains('in-progress-btn')) {
+    const tripId = e.target.closest('.trip-card').querySelector('.seats').dataset.tripId;
+    trips.find(t => t.id === parseInt(tripId)).status = 'in_progress';
+    renderDriverPanel();
+  }
+  if (e.target.classList.contains('complete-trip-btn')) {
+    const tripId = e.target.closest('.trip-card').querySelector('.seats').dataset.tripId;
+    trips.find(t => t.id === parseInt(tripId)).status = 'completed';
+    renderDriverPanel();
+  }
+  if (e.target.classList.contains('delete-btn')) {
+    const tripCard = e.target.closest('.trip-card');
+    const driverName = tripCard.querySelector('p').textContent.split(': ')[1];
+    const tripId = trips.findIndex(t => t.driver.name === driverName);
+    trips.splice(tripId, 1);
+    renderAdminPanel();
+  }
 });
 
 // Инициализация
-renderTrips();
+if (window.location.pathname.includes('driver-admin.html')) {
+  if (!loggedInUser) {
+    loginPanel.style.display = 'block';
+  } else if (users[loggedInUser].role === 'driver') {
+    driverPanel.style.display = 'block';
+    renderDriverPanel();
+  } else if (users[loggedInUser].role === 'admin') {
+    adminPanel.style.display = 'block';
+    renderAdminPanel();
+  }
+} else {
+  renderPassengerTrips();
+}
