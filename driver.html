@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Водитель — Добавить поездку</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Добавление поездки</h1>
+    <p>Укажите маршрут, дату и доступные места</p>
+  </header>
+
+  <main class="container">
+    <form id="driverForm">
+      <input type="text" name="driverName" placeholder="Ваше имя" required />
+      <input type="tel" name="driverPhone" placeholder="Телефон" required />
+
+      <select id="driverRoute" required></select>
+      <input type="date" id="driverDate" required />
+      
+      <label for="seats">Количество свободных мест:</label>
+      <input type="number" id="seats" min="1" max="6" required />
+
+      <button type="submit">Активировать поездку</button>
+    </form>
+
+    <div id="driverStatus"></div>
+  </main>
+
+  <footer>
+    <p>&copy; Межгород 2025</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
