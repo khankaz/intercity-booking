@@ -10,42 +10,13 @@
 <body>
   <header class="header">
     <div class="container">
-      <h1>Бронирование поездки</h1>
+      <h1>Ближайшие водители</h1>
     </div>
   </header>
   <main class="main">
     <div class="container">
-      <div class="booking-form">
-        <h2>Выберите поездку</h2>
-        <select class="input-field" id="route-select">
-          <option value="">Маршрут</option>
-          <option value="Караганда → Астана">Караганда → Астана</option>
-          <option value="Караганда → Щучинск">Караганда → Щучинск</option>
-          <option value="Караганда → Бурабай">Караганда → Бурабай</option>
-          <option value="Астана → Караганда">Астана → Караганда</option>
-          <option value="Щучинск → Караганда">Щучинск → Караганда</option>
-          <option value="Бурабай → Караганда">Бурабай → Караганда</option>
-        </select>
-        <input type="date" class="input-field" id="date-select" min="2025-06-16">
-        <div class="seat-selection">
-          <h3>Салон автомобиля (выберите места)</h3>
-          <div class="seat-map" id="seat-map">
-            <div class="row"><button class="seat" data-seat="1">1</button><button class="seat" data-seat="2">2</button></div>
-            <div class="row"><button class="seat" data-seat="3">3</button><button class="seat" data-seat="4">4</button></div>
-            <div class="car-icon"><i class="fas fa-car-side"></i></div>
-          </div>
-          <div class="legend">
-            <span><i class="fas fa-circle" style="color: #28a745;"></i> Свободно</span>
-            <span><i class="fas fa-circle" style="color: #dc3545;"></i> Занято</span>
-          </div>
-        </div>
-        <button class="btn primary" id="book-btn">Забронировать</button>
-      </div>
-      <div class="drivers-list">
-        <h2>Ближайшие водители</h2>
-        <div class="driver-card" id="driver-list">
-          <!-- Данные заполняются динамически -->
-        </div>
+      <div class="drivers-list" id="driver-list">
+        <!-- Данные заполняются динамически -->
       </div>
     </div>
   </main>
@@ -54,6 +25,29 @@
       <p>© 2025 Междугородние поездки</p>
     </div>
   </footer>
+  <div class="modal" id="trip-modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h2 id="modal-title"></h2>
+      <img id="modal-car-photo" src="" alt="Фото авто">
+      <p><strong>Водитель:</strong> <span id="modal-driver-name"></span></p>
+      <p><strong>Дата отправки:</strong> <span id="modal-trip-date"></span></p>
+      <p><strong>Марка и кузов:</strong> <span id="modal-car-model"></span></p>
+      <p><strong>Рейтинг:</strong> <span id="modal-rating"></span> ★</p>
+      <h3>Отзывы</h3>
+      <div id="modal-reviews"></div>
+      <h3>Схема салона</h3>
+      <div class="seat-map" id="modal-seat-map"></div>
+      <div class="legend">
+        <span><i class="fas fa-chair" style="color: #28a745;"></i> Свободно</span>
+        <span><i class="fas fa-chair" style="color: #dc3545;"></i> Занято</span>
+        <span><i class="fas fa-chair" style="color: #007bff;"></i> Выбрано</span>
+      </div>
+      <h3>Маршруты других пассажиров</h3>
+      <div id="modal-passenger-routes"></div>
+      <button class="btn primary" id="book-modal-btn">Забронировать</button>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
